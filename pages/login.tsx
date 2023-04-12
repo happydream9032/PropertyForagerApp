@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout/Layout";
 import LoginComponent from "@/components/User/Login";
+import { getAuthorizedRedirectPath } from "@/utils/routes";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -14,11 +15,11 @@ export default function Lpgin() {
   const handleClose = () => {
     setOpen(false);
     const previousPage = router.query["rt"] as string;
-    if (previousPage) {
-      router.replace(previousPage);
-    } else {
-      router.replace("/");
+    const redirectPath = getAuthorizedRedirectPath(previousPage);
+    if (!redirectPath) {
+      return router.replace("/");
     }
+    router.replace(redirectPath);
   };
 
   return (

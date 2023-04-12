@@ -14,6 +14,7 @@ import { IAuthenticateResponse } from "@/types/user";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import { FORAGER_AUTH_DATA } from "@/utils/constants";
+import { getAuthorizedRedirectPath } from "@/utils/routes";
 
 interface IProps {
   openLoginForm: boolean;
@@ -52,11 +53,13 @@ const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
         resData
       )};expires=${dayjs().add(60, "minute").toString()};`;
       const previousPage = router.query["rt"] as string;
-      if (previousPage) {
-        router.push(previousPage);
-      } else {
-        router.push(`/${resData.userName.split("@")[0]}?pId=${resData.id}`);
+      const redirectPath = getAuthorizedRedirectPath(previousPage);
+      if (!redirectPath) {
+        return router.push(
+          `/${resData.userName.split("@")[0]}?pId=${resData.id}`
+        );
       }
+      router.push(redirectPath);
     } catch (error) {
       setResponse({
         ...response,
