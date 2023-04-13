@@ -49,7 +49,6 @@ export default function Layout({ children, pageTitle }: IProps) {
       </Head>
       <Box sx={{ height: "fit-content" }}>
         <CssBaseline />
-
         <NavBar
           navItems={navItems}
           navButtonTextColor={navButtonTextColor}
@@ -65,7 +64,7 @@ export default function Layout({ children, pageTitle }: IProps) {
           authNavItems={authNavItems}
           drawerWidth={drawerWidth}
         />
-        <Box component="main">
+        <Box component="main" >
           <Toolbar sx={{ height: "6rem" }} />
           {children}
         </Box>

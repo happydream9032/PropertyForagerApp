@@ -29,7 +29,7 @@ const NavBar: FC<INavBarProps> = ({
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box display="flex" alignItems="center" justifyContent="center">
           <IconButton
-            color="inherit"
+            color="success"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
