@@ -14,8 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const setIntervalRef = useRef<NodeJS.Timer | null>(null);
   //function that pings the external backend api
   const pingApi = async () => {
-    const res = await axiosInstance.get(`/api/ping`);
-    console.log("PING RESPONSE: ", res.data);
+    await axiosInstance.get(`/api/ping`);
   };
 
   //Invoke the above function every 10 minutes
