@@ -1,12 +1,36 @@
 import React from "react";
+import Image from "next/image";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-import BusinessIcon from "@mui/icons-material/Business";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import CallIcon from "@mui/icons-material/Call";
+import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import TextFieldWithLabel from "../TextFields/TextFieldWithLabel";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import customerService from "../../public/contact_service.png";
+import { Button } from "@mui/material";
+
+
+const StyledImage = styled(Image)(({ theme }) => ({
+  width: "100%",
+  height: "600px",
+  color: theme.palette.primary.main,
+  [theme.breakpoints.down("sm")]: {
+    height: "400px",
+  },
+}));
+
+const StyledButton = styled(Button)(()=> ({
+  background: '#8D49F1',
+  color: 'white',
+  width: '100px',
+  borderRadius: '43px',
+  "&:hover": {
+    background: '#7320ee',
+  }
+}))
+
 
 const StyledHeading = styled(Typography)(({ theme }) => ({
   fontWeight: 400,
@@ -23,6 +47,12 @@ const StyledParagraph = styled(Typography)(({ theme }) => ({
   marginLeft: 26,
   // fontSize: 8
 }));
+
+const StyledLabel = styled("label")(()=>({
+  color: 'black',
+  margin: 0,
+  fontWeight: 500
+}))
 
 const StyledTextArea = styled("textarea")(({ theme }) => ({
   resize: "none",
@@ -55,30 +85,40 @@ const About = () => {
         my={4}
         px={{ xs: 2, sm: 3 }}
       >
-        <Grid item py={3} xs={12} md={6}>
-          <StyledSubHeading variant="h3">Reach us</StyledSubHeading>
-          <StyledParagraph as="p">
-            We are committed to answering what ever questions you want to ask.
-            Reach out to us and we will answer you.
-          </StyledParagraph>
-          <Box sx={{ marginLeft: "26px" }}>
+        <Grid item xs={12} p={2} >
+          <Box>
+            <Typography sx={{fontWeight: '500', fontSize: 43}}>Get in touch</Typography>
+            <Typography>Our support team and Agents are always available to attend to you and answer your questions.</Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={12} p={1} >
+          <Box>
+            <StyledImage src={customerService} alt="Customer service image" />
+          </Box>
+          <Box py={2}>
+            <StyledParagraph>Our support team and Agents are always available to attend toyou and answer your questions.</StyledParagraph>
+          </Box>
+        </Grid>
+        <Grid item py={3} my={5} xs={12} md={6} sx={{background: '#D9D9D9', borderRadius: 5}}>
+          <Box sx={{ }}>
             <Box my={1} display={"flex"} p={2}>
-              <BusinessIcon />
+              <LocationOnIcon />
               <StyledParagraph>
-                3880 Peter Obi Street Akeleje, Il 60606 Jagaban Emirate
+              37 Broad Street, Marina, Lagos state.
               </StyledParagraph>
             </Box>
             <Box my={1} display={"flex"} p={2}>
               <MailOutlineIcon />
-              <StyledParagraph>Company name here</StyledParagraph>
+              <StyledParagraph>propertyforager37@gmail.com </StyledParagraph>
             </Box>
             <Box my={1} display={"flex"} p={2}>
-              <CallIcon />
-              <StyledParagraph>+234-485-3885</StyledParagraph>
+              <PhoneInTalkIcon />
+              <StyledParagraph>255-564-1243</StyledParagraph>
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={12} md={5.5}>
+        <Grid item xs={12}>
+          <StyledSubHeading>Details Please</StyledSubHeading>
           <Box
             display="flex"
             flexDirection="column"
@@ -86,6 +126,7 @@ const About = () => {
             component="form"
             p={2}
           >
+            <StyledLabel>Name</StyledLabel>
             <TextFieldWithLabel
               fullWidth
               type="text"
@@ -94,6 +135,7 @@ const About = () => {
               // value={email}
               // onChange={(e) => setEmail(e.target.value)}
             />
+            <StyledLabel>Email Address</StyledLabel>
             <TextFieldWithLabel
               fullWidth
               type="email"
@@ -101,6 +143,7 @@ const About = () => {
               label="Enter your email"              // value={email}
               // onChange={(e) => setEmail(e.target.value)}
             />
+            <StyledLabel>Phone</StyledLabel>
             <TextFieldWithLabel
               fullWidth
               type="text"
@@ -109,7 +152,9 @@ const About = () => {
               // value={email}
               // onChange={(e) => setEmail(e.target.value)}
             />
+            <StyledLabel>Message</StyledLabel>
             <StyledTextArea name="message" placeholder="How can we help you?" />
+            <StyledButton>Submit</StyledButton>
           </Box>
         </Grid>
       </Grid>
