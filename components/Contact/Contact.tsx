@@ -100,7 +100,7 @@ const About = () => {
           </Box>
         </Grid>
         <Grid item py={3} my={5} xs={12} md={6} sx={{background: '#D9D9D9', borderRadius: 5}}>
-          <Box sx={{ }}>
+          <Box>
             <Box my={1} display={"flex"} p={2}>
               <LocationOnIcon />
               <StyledParagraph>
