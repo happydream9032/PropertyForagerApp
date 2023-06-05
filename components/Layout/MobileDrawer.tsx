@@ -28,11 +28,13 @@ const MobileDrawer: FC<IMobileDrawerProps> = ({
         py: 4,
       }}
     >
-      <List>
+      <List >
         {navItems.map((item, i) => (
           <ListItem key={i} disablePadding>
-            <ListItemButton href={item.href} sx={{ textAlign: "center" }}>
+            <ListItemButton sx={{ textAlign: "center" }}>
+              <Link style={{color: 'inherit', textDecoration:'none', width: '100%'}} href={item.href}>
               <ListItemText primary={item.name} />
+              </Link>
             </ListItemButton>
           </ListItem>
         ))}
