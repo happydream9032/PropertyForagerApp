@@ -25,7 +25,6 @@ interface IPropertyImage extends BaseType {
   id: string;
   imageURL: string;
   verified: boolean;
-  propertyId: string;
 }
 
 export interface IProperty extends BaseType {
