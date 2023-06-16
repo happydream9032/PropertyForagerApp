@@ -4,6 +4,27 @@ export enum RoleType {
   PropertyOwner,
 }
 
+export interface IUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  emailConfirmed: boolean;
+  userName: string;
+  phoneNumber: string;
+  phoneNumberConfirmed: boolean;
+  registrationDate: Date;
+  allowNewPropertyNotifications: boolean;
+  allowRentDueNotifications: boolean;
+  allowRentPaymentNotifications: boolean;
+  city: string | null;
+  state: string | null;
+  gender: string | null;
+  employmentStatus: string | null;
+  avatarUrl: string;
+  imageFileId: string;
+  profileCompletionPercentage: 50;
+}
+
 export interface IUserRegistrationRequest {
   firstName: string;
   lastName: string;

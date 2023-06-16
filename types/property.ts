@@ -1,4 +1,5 @@
 import { IAgency } from "./agency";
+import { IUser } from "./user";
 
 export enum PropertyStatus {
   Published,
@@ -35,7 +36,7 @@ export interface IProperty extends BaseType {
   street: string;
   status: PropertyStatus;
   availability: PropertyAvailability;
-  type: PropertyType;
+  propertyType: PropertyType;
   price: number;
   priceType: PropertyPriceType;
   numberOfBedrooms: number;
@@ -47,6 +48,8 @@ export interface IProperty extends BaseType {
   serviced?: boolean;
   shared?: boolean;
   images: IPropertyImage[];
+  ownerId?: string;
+  owner?: IUser;
   agencyId?: string;
   agency?: IAgency;
 }
