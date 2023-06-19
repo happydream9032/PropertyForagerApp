@@ -2,24 +2,26 @@ import React, { FC, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import PropertyDisplayCard from "./PropertyDisplayCard";
-import { PropertyPriceType, LatestProperties } from "@/types/property";
+import PropertyDisplayCard from "../Shared/PropertyDisplayCard";
+import { PropertiesList } from "@/types/property";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import { useTheme } from "@mui/material/styles";
 import { _getLatestProperties } from "@/services/propertyService";
+import Link from "next/link";
+import PropertiesLoader from "../Shared/PropertiesLoader";
 
 const LatestProperties: FC = () => {
   const theme = useTheme();
-  const [latestProperties, setLatestProperties] = useState<LatestProperties>({
-    properties: [],
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [latestProperties, setLatestProperties] = useState<PropertiesList>([]);
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       const response = await _getLatestProperties();
-      const propertiesData = response.data as LatestProperties;
-
+      const propertiesData = response.data.properties;
       setLatestProperties(propertiesData);
+      setIsLoading(false);
     })();
   }, []);
 
@@ -65,28 +67,37 @@ const LatestProperties: FC = () => {
           disableElevation
           variant="outlined"
         >
-          View All Properties
+          <Link
+            style={{ color: "inherit", textDecoration: "none", width: "100%" }}
+            href="/properties"
+          >
+            View All Properties
+          </Link>
         </PrimaryButton>
       </Box>
-      <Grid mt={2} spacing={4} container>
-        {latestProperties.properties.map((p) => (
-          <Grid xs={12} md={6} lg={4} item key={p.id}>
-            <PropertyDisplayCard
-              id={p.id}
-              images={p.images}
-              locality={p.locality}
-              numberOfBathrooms={p.numberOfBathrooms}
-              numberOfBedrooms={p.numberOfBedrooms}
-              price={p.price}
-              priceType={p.priceType}
-              street={p.street}
-              title={p.title}
-              description={p.description}
-              totalLandArea={p.totalLandArea}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      {isLoading ? (
+        <PropertiesLoader />
+      ) : (
+        <Grid mt={2} spacing={4} container>
+          {latestProperties.map((p) => (
+            <Grid xs={12} md={6} lg={4} item key={p.id}>
+              <PropertyDisplayCard
+                id={p.id}
+                images={p.images}
+                locality={p.locality}
+                numberOfBathrooms={p.numberOfBathrooms}
+                numberOfBedrooms={p.numberOfBedrooms}
+                price={p.price}
+                priceType={p.priceType}
+                street={p.street}
+                title={p.title}
+                description={p.description}
+                totalLandArea={p.totalLandArea}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </Box>
   );
 };
