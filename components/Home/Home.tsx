@@ -1,5 +1,5 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -22,6 +22,7 @@ const StyledHeading = styled(Typography)(({ theme }) => ({
 }));
 
 const Home = () => {
+  const theme = useTheme();
   return (
     <Box sx={{ pt: "4rem" }}>
       {/* FIRST SECTION */}
@@ -35,7 +36,10 @@ const Home = () => {
         <Grid item xs={12} md={6}>
           <Box>
             <StyledHeading variant="h2">
-              Find your dream home with Property Forager
+              Find your dream home with{" "}
+              <span style={{ color: theme.palette.primary.main }}>
+                Property Forager
+              </span>
             </StyledHeading>
           </Box>
         </Grid>

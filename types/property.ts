@@ -68,6 +68,31 @@ export type PropertyOverview = Pick<
   | "locality"
 >;
 
-export type LatestProperties = {
-  properties: PropertyOverview[];
+// export type PropertiesList = {
+//   properties: PropertyOverview[];
+// };
+
+export type PropertiesList = PropertyOverview[];
+
+export type PropertiesListParams = {
+  pageNumber: number;
+  pageSize: number;
+  locality: string;
+  street: string;
+  propertyType: PropertyType;
+  maximumPrice: number;
+  minimumPrice: number;
+  priceType: PropertyPriceType;
+  numberOfBedrooms: number;
+  numberOfBathrooms: number;
+  numberOfToilets: number;
+  maximumParkingSpace: number;
+  minimumParkingSpace: number;
+  furnished: boolean;
+  serviced: boolean;
+  shared: boolean;
+  ownerId: string;
+  agencyId: string;
 };
+
+export type ListPropertiesRequest = Partial<PropertiesListParams>;
