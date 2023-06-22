@@ -8,7 +8,7 @@ interface IProps {
 
 const PropertiesLoader: FC<IProps> = ({ height = 200 }) => {
   return (
-    <Grid spacing={2} container>
+    <Grid mt={1} spacing={2} container>
       {Array.from(new Array(3)).map((_, index) => (
         <Grid xs={12} md={6} lg={4} item key={index}>
           <Skeleton

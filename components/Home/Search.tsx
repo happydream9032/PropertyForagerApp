@@ -3,8 +3,9 @@ import { styled } from "@mui/material";
 import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
+import { useRouter } from "next/router";
 
 const StyledSearchInput = styled(InputBase)(({ theme }) => ({
   width: "100%",
@@ -30,6 +31,9 @@ const StyledSearchBox = styled(Box)(({ theme }) => ({
 }));
 
 const Search = () => {
+  const router = useRouter();
+  const [searchValue, setSearchValue] = useState("");
+
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       <Typography fontWeight={400} variant="body1" component="p">
@@ -40,6 +44,7 @@ const Search = () => {
       <StyledSearchBox
         onSubmit={(e) => {
           e.preventDefault();
+          router.push(`/properties?searchValue=${searchValue}`);
         }}
         component="form"
       >
@@ -51,8 +56,10 @@ const Search = () => {
           }}
         />
         <StyledSearchInput
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
           sx={{ width: "100%", ":-moz-placeholder": { color: "red" } }}
-          placeholder="Enter a state, city or area"
+          placeholder="Enter a state, city or locality"
         />
 
         <PrimaryButton

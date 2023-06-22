@@ -68,17 +68,12 @@ export type PropertyOverview = Pick<
   | "locality"
 >;
 
-// export type PropertiesList = {
-//   properties: PropertyOverview[];
-// };
-
 export type PropertiesList = PropertyOverview[];
 
 export type PropertiesListParams = {
   pageNumber: number;
   pageSize: number;
-  locality: string;
-  street: string;
+  searchKeyword: string;
   propertyType: PropertyType;
   maximumPrice: number;
   minimumPrice: number;
