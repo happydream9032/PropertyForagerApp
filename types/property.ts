@@ -51,6 +51,7 @@ export interface IProperty extends BaseType {
   owner?: IUser;
   agencyId?: string;
   agency?: IAgency;
+  publishedDate?: Date;
 }
 
 export type PropertyOverview = Pick<

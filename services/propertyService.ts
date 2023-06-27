@@ -30,3 +30,14 @@ export const _getPropertiesList = async (payload?: ListPropertiesRequest) => {
 
   return response;
 };
+
+export const _getPropertyDetails = async (propertyId: string) => {
+  const response = await axiosInstance.get(`/api/properties/${propertyId}`, {
+    validateStatus: (status) => status < 500,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return response;
+};
