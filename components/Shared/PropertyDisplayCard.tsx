@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ElementType, FC } from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -9,6 +9,7 @@ import LocationIcon from "@mui/icons-material/LocationOnOutlined";
 import BedroomIcon from "@mui/icons-material/BedroomParentOutlined";
 import BathroomIcon from "@mui/icons-material/BathroomOutlined";
 import { PropertyOverview, PropertyPriceType } from "@/types/property";
+import Link from "next/link";
 
 const PropertyDisplayCard: FC<PropertyOverview> = (props) => {
   const theme = useTheme();
@@ -16,6 +17,15 @@ const PropertyDisplayCard: FC<PropertyOverview> = (props) => {
     <Box
       sx={{
         cursor: "pointer",
+        textDecoration: "none",
+        "& .MuiBox-root": {
+          ":hover": {
+            transform: "scale(1.03)",
+            transitionProperty: "transform",
+            transitionTimingFunction: theme.transitions.easing.easeInOut,
+            transitionDuration: "150ms",
+          },
+        },
         ":hover": {
           transform: "scale(1.03)",
           transitionProperty: "transform",
@@ -23,6 +33,8 @@ const PropertyDisplayCard: FC<PropertyOverview> = (props) => {
           transitionDuration: "150ms",
         },
       }}
+      href={`/property/${props.id}`}
+      component={Link}
     >
       <Box
         sx={{
