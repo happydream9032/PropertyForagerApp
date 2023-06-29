@@ -31,8 +31,17 @@ const PropertySummary: FC<IProperty> = (props) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" gap={4} mb={4}>
-      <ListingPriceCardBox sx={{ display: { md: "none" } }} {...props} />
+    <Box
+      display="flex"
+      flexDirection="column"
+      sx={{ px: { xs: 1, md: 4 }, width: "100%" }}
+      gap={4}
+      mb={4}
+    >
+      <ListingPriceCardBox
+        sx={{ mx: "auto", display: { md: "none" } }}
+        {...props}
+      />
       <Box sx={{ width: "80%", height: "600px", mx: "auto" }}>
         <Box
           sx={{
@@ -64,7 +73,13 @@ const PropertySummary: FC<IProperty> = (props) => {
             <ArrowBackIcon fontSize="medium" />
           </IconButton>
           <ListingPriceCardBox
-            sx={{ width: "16rem", position: "absolute", right: 30, mt: -8 }}
+            sx={{
+              display: { xs: "none", md: "unset" },
+              width: "16rem",
+              position: "absolute",
+              right: 30,
+              mt: -8,
+            }}
             {...props}
           />
           <Features
