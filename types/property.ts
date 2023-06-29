@@ -21,7 +21,7 @@ export enum PropertyPriceType {
   PerMonth,
 }
 
-interface IPropertyImage extends BaseType {
+export interface IPropertyImage extends BaseType {
   id: string;
   imageURL: string;
   verified: boolean;

@@ -1,11 +1,11 @@
-import { IProperty } from "./property";
+import { IUser } from "./user";
 
 export interface IAgency extends BaseType {
   id: string;
   agencyName?: string;
-  properties: IProperty[];
   city?: string;
   state?: string;
+  street?: string;
   ownerId: string;
-  profileCompletionPercentage: number;
+  owner: IUser;
 }

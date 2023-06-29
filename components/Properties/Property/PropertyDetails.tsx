@@ -8,13 +8,13 @@ import ContactAgent from "./ContactAgent";
 
 const PropertyDetails: FC<IProperty> = (props) => {
   return (
-    <Box display="flex" flexDirection="column" gap={3} px={3}>
+    <Box display="flex" flexDirection="column" gap={3}>
       <Box
         display="flex"
         flexDirection="column"
         alignItems="left"
         justifyContent="center"
-        sx={{ py: 3 }}
+        sx={{ py: 3, px: 4 }}
       >
         <Typography fontWeight={500} variant="h3">
           {props.street}
@@ -24,8 +24,8 @@ const PropertyDetails: FC<IProperty> = (props) => {
         </Typography>
       </Box>
       <PropertySummary {...props} />
-      <ImageGallery />
-      <ContactAgent />
+      <ImageGallery images={props.images} />
+      <ContactAgent {...props} />
     </Box>
   );
 };
