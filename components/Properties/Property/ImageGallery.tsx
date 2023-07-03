@@ -2,21 +2,14 @@ import { IPropertyImage } from "@/types/property";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React, { FC } from "react";
-import { styled, useTheme } from "@mui/material/styles";
-
-const StyledSvg = styled("svg")(({ theme }) => ({
-  width: "3rem",
-  height: "3rem",
-  position: "absolute",
-  color: "white",
-  backgroundColor: theme.palette.primary.main,
-  display: "none",
-  borderRadius: "5px",
-}));
+import React, { FC, useState } from "react";
+import { useTheme } from "@mui/material/styles";
+import StyledSvg from "@/components/Shared/StyledSvg";
+import ImageViewModal from "./ImageViewModal";
 
 const ImageGallery: FC<{ images: IPropertyImage[] }> = ({ images }) => {
   const theme = useTheme();
+  const [openImageViewer, setOpenImageViewer] = useState(false);
   return (
     <Box
       sx={{ backgroundColor: theme.palette.primary.main, py: 14, px: 4 }}
@@ -24,6 +17,11 @@ const ImageGallery: FC<{ images: IPropertyImage[] }> = ({ images }) => {
       flexDirection="column"
       gap={6}
     >
+      <ImageViewModal
+        images={images}
+        open={openImageViewer}
+        setOpen={setOpenImageViewer}
+      />
       <Typography sx={{ color: "white" }} fontWeight={500} variant="h3">
         Image gallery
       </Typography>
@@ -44,7 +42,7 @@ const ImageGallery: FC<{ images: IPropertyImage[] }> = ({ images }) => {
             key={index}
             item
             xs={12}
-            md={6}
+            sm={6}
             lg={4}
             sx={{
               cursor: "pointer",
@@ -88,6 +86,13 @@ const ImageGallery: FC<{ images: IPropertyImage[] }> = ({ images }) => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
+              sx={{
+                color: "white",
+                p: 1,
+                backgroundColor: theme.palette.primary.main,
+                display: "none",
+              }}
+              onClick={() => setOpenImageViewer(true)}
             >
               <path
                 strokeLinecap="round"

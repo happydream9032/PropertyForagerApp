@@ -7,14 +7,24 @@ import PrimaryButton from "@/components/Buttons/PrimaryButton";
 
 const ContactAgent: FC<IProperty> = (props) => {
   return (
-    <Box px={4} py={12} display="flex" gap={6} sx={{ width: "100%" }}>
+    <Box
+      px={4}
+      py={12}
+      display="flex"
+      gap={6}
+      sx={{
+        width: "100%",
+        flexDirection: { xs: "column-reverse", sm: "row" },
+        alignItems: { xs: "center", sm: "flex-start" },
+      }}
+    >
       <Box
         position="relative"
         display="flex"
         alignItems="center"
         justifyContent="center"
         sx={{
-          width: "30%",
+          width: { xs: "100%", sm: "40%" },
         }}
       >
         <Box
@@ -85,7 +95,12 @@ const ContactAgent: FC<IProperty> = (props) => {
           </Box>
         )}
       </Box>
-      <Box sx={{ width: "50%" }} display="flex" flexDirection="column" gap={3}>
+      <Box
+        sx={{ width: { xs: "100%", sm: "50%" } }}
+        display="flex"
+        flexDirection="column"
+        gap={3}
+      >
         <Typography fontWeight={500} variant="h5">
           Interested in this property? Request a visit.
         </Typography>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -7,6 +7,7 @@ import Search from "./Search";
 import Image from "next/image";
 import sampleProperty from "../../public/prop.jpeg";
 import LatestProperties from "./LatestProperties";
+import { PropertiesList } from "@/types/property";
 
 const StyledImage = styled(Image)(({ theme }) => ({
   width: "100%",
@@ -21,7 +22,7 @@ const StyledHeading = styled(Typography)(({ theme }) => ({
   fontWeight: 500,
 }));
 
-const Home = () => {
+const Home: FC<{ properties: PropertiesList }> = (props) => {
   const theme = useTheme();
   return (
     <Box sx={{ pt: "4rem" }}>
@@ -51,7 +52,7 @@ const Home = () => {
       <Box sx={{ mt: 6 }}>
         <StyledImage src={sampleProperty} alt="Sample property" />
       </Box>
-      <LatestProperties />
+      <LatestProperties {...props} />
     </Box>
   );
 };
