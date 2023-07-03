@@ -25,7 +25,7 @@ const SimpleDialog: React.FC<IProps> = ({
         alignItems="center"
         justifyContent="space-between"
       >
-        {modalTitle}{" "}
+        <span>{modalTitle} </span>
         <IconButton onClick={handleClose}>
           <CloseIcon fontSize="large" />
         </IconButton>

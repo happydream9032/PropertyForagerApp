@@ -10,20 +10,22 @@ import { _getLatestProperties } from "@/services/propertyService";
 import Link from "next/link";
 import PropertiesLoader from "../Shared/PropertiesLoader";
 
-const LatestProperties: FC = () => {
+const LatestProperties: FC<{ properties: PropertiesList }> = ({
+  properties,
+}) => {
   const theme = useTheme();
-  const [isLoading, setIsLoading] = useState(false);
-  const [latestProperties, setLatestProperties] = useState<PropertiesList>([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [latestProperties, setLatestProperties] = useState<PropertiesList>([]);
 
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      const response = await _getLatestProperties();
-      const propertiesData = response.data.properties;
-      setLatestProperties(propertiesData);
-      setIsLoading(false);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     setIsLoading(true);
+  //     const response = await _getLatestProperties();
+  //     const propertiesData = response.data.properties;
+  //     setLatestProperties(propertiesData);
+  //     setIsLoading(false);
+  //   })();
+  // }, []);
 
   return (
     <Box mt={2} sx={{ py: 2, px: { xs: 2, sm: 6 } }}>
@@ -75,7 +77,7 @@ const LatestProperties: FC = () => {
           </Link>
         </PrimaryButton>
       </Box>
-      {isLoading ? (
+      {/* {isLoading ? (
         <PropertiesLoader />
       ) : (
         <Grid mt={2} spacing={4} container>
@@ -97,7 +99,26 @@ const LatestProperties: FC = () => {
             </Grid>
           ))}
         </Grid>
-      )}
+      )} */}
+      <Grid mt={2} spacing={4} container>
+        {properties.map((p) => (
+          <Grid xs={12} md={6} lg={4} item key={p.id}>
+            <PropertyDisplayCard
+              id={p.id}
+              images={p.images}
+              locality={p.locality}
+              numberOfBathrooms={p.numberOfBathrooms}
+              numberOfBedrooms={p.numberOfBedrooms}
+              price={p.price}
+              priceType={p.priceType}
+              street={p.street}
+              title={p.title}
+              description={p.description}
+              totalLandArea={p.totalLandArea}
+            />
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   );
 };

@@ -8,7 +8,12 @@ import ContactAgent from "./ContactAgent";
 
 const PropertyDetails: FC<IProperty> = (props) => {
   return (
-    <Box display="flex" flexDirection="column" gap={3}>
+    <Box
+      sx={{ width: "100%", maxWidth: "100%", overflowX: "hidden" }}
+      display="flex"
+      flexDirection="column"
+      gap={3}
+    >
       <Box
         display="flex"
         flexDirection="column"

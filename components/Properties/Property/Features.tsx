@@ -21,15 +21,16 @@ const Features: FC<IProperty & { sx?: SxProps }> = (props) => {
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "row", sm: "column" },
+          flexDirection: "column",
           gap: 1,
+          width: { xs: "40%", sm: "unset" },
         }}
       >
         <Typography
           fontWeight={500}
           variant="body1"
           component="div"
-          sx={{ color: { xs: theme.palette.grey[800], md: "white" } }}
+          sx={{ color: { xs: theme.palette.grey[800], sm: "white" } }}
         >
           Bedrooms
         </Typography>
@@ -37,7 +38,7 @@ const Features: FC<IProperty & { sx?: SxProps }> = (props) => {
           <BedroomIcon
             fontSize="medium"
             sx={{
-              color: { xs: theme.palette.grey[700], md: "white" },
+              color: { xs: theme.palette.grey[700], sm: "white" },
             }}
           />
           <Typography fontSize="1.2rem" fontWeight={700}>
@@ -46,22 +47,23 @@ const Features: FC<IProperty & { sx?: SxProps }> = (props) => {
         </Box>
       </Box>
       <Divider
-        sx={{ display: { xs: "none", md: "block" }, backgroundColor: "white" }}
+        sx={{ display: { xs: "none", sm: "block" }, backgroundColor: "white" }}
         orientation="vertical"
         flexItem
       />
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "row", sm: "column" },
+          flexDirection: "column",
           gap: 1,
+          width: { xs: "40%", sm: "unset" },
         }}
       >
         <Typography
           fontWeight={500}
           variant="body1"
           component="div"
-          sx={{ color: { xs: theme.palette.grey[800], md: "white" } }}
+          sx={{ color: { xs: theme.palette.grey[800], sm: "white" } }}
         >
           Bathrooms
         </Typography>
@@ -69,7 +71,7 @@ const Features: FC<IProperty & { sx?: SxProps }> = (props) => {
           <BathroomIcon
             fontSize="medium"
             sx={{
-              color: { xs: theme.palette.grey[700], md: "white" },
+              color: { xs: theme.palette.grey[700], sm: "white" },
             }}
           />
           <Typography fontSize="1.2rem" fontWeight={700}>
@@ -78,45 +80,47 @@ const Features: FC<IProperty & { sx?: SxProps }> = (props) => {
         </Box>
       </Box>
       <Divider
-        sx={{ display: { xs: "none", md: "block" }, backgroundColor: "white" }}
-        orientation="vertical"
-        flexItem
-      />
-      <Box>
-        <Typography
-          fontWeight={500}
-          variant="body1"
-          component="span"
-          sx={{ color: { xs: theme.palette.grey[800], md: "white" } }}
-        >
-          Area
-        </Typography>
-        <Box
-          pt={1}
-          gap={1}
-          display="flex"
-          alignItems="center"
-          flexDirection="row"
-        >
-          <Typography fontSize="1.2rem" fontWeight={700}>
-            {props.totalLandArea} ft<sup>2</sup>
-          </Typography>
-        </Box>
-      </Box>
-      <Divider
-        sx={{ display: { xs: "none", md: "block" }, backgroundColor: "white" }}
+        sx={{ display: { xs: "none", sm: "block" }, backgroundColor: "white" }}
         orientation="vertical"
         flexItem
       />
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "row", sm: "column" },
+          flexDirection: "column",
           gap: 1,
+          width: { xs: "40%", sm: "unset" },
         }}
       >
         <Typography
-          sx={{ color: { xs: theme.palette.grey[800], md: "white" } }}
+          fontWeight={500}
+          variant="body1"
+          component="span"
+          sx={{ color: { xs: theme.palette.grey[800], sm: "white" } }}
+        >
+          Area
+        </Typography>
+        <Box gap={1} display="flex" alignItems="center" flexDirection="row">
+          <Typography fontSize="1.2rem" fontWeight={700}>
+            {props.totalLandArea} ft<sup>2</sup>
+          </Typography>
+        </Box>
+      </Box>
+      <Divider
+        sx={{ display: { xs: "none", sm: "block" }, backgroundColor: "white" }}
+        orientation="vertical"
+        flexItem
+      />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          width: { xs: "40%", sm: "unset" },
+        }}
+      >
+        <Typography
+          sx={{ color: { xs: theme.palette.grey[800], sm: "white" } }}
           fontWeight={500}
           variant="body1"
           component="div"
@@ -127,7 +131,7 @@ const Features: FC<IProperty & { sx?: SxProps }> = (props) => {
           <DriveEtaIcon
             fontSize="medium"
             sx={{
-              color: { xs: theme.palette.grey[700], md: "white" },
+              color: { xs: theme.palette.grey[700], sm: "white" },
             }}
           />
           <Typography fontSize="1.2rem" fontWeight={700}>
