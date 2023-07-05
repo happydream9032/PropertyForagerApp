@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import { FORAGER_AUTH_DATA } from "@/utils/constants";
 import { getAuthorizedRedirectPath } from "@/utils/routes";
+import useAuthData from "../Shared/useAuthData";
 
 interface IProps {
   openLoginForm: boolean;
@@ -23,6 +24,7 @@ interface IProps {
 
 const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
   const router = useRouter();
+  const { authData } = useAuthData();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -55,11 +57,14 @@ const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
       const previousPage = router.query["rt"] as string;
       const redirectPath = getAuthorizedRedirectPath(previousPage);
       if (!redirectPath) {
-        return router.push(
-          `/${resData.userName.split("@")[0]}?pId=${resData.id}`
-        );
+        if (!resData.roles.includes("Tenant")) {
+          router.push("/backoffice");
+        } else {
+          router.push(`/${resData.userName.split("@")[0]}?pId=${resData.id}`);
+        }
+      } else {
+        router.push(redirectPath);
       }
-      router.push(redirectPath);
     } catch (error) {
       setResponse({
         ...response,
@@ -74,6 +79,17 @@ const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
       }, 9000);
     }
   };
+
+  if (authData) {
+    const previousPage = router.query["rt"] as string;
+    const redirectPath = getAuthorizedRedirectPath(previousPage);
+    if (redirectPath) {
+      router.push(redirectPath);
+    } else {
+      router.push("/");
+    }
+  }
+
   return (
     <SimpleDialog
       maxWidth="md"
