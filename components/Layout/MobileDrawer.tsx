@@ -9,6 +9,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import React, { FC } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
+import useAuthData from "../Shared/useAuthData";
+import { isOrdinaryUser, logout } from "@/utils/functions";
 
 const MobileDrawer: FC<IMobileDrawerProps> = ({
   authNavItems,
@@ -18,6 +20,8 @@ const MobileDrawer: FC<IMobileDrawerProps> = ({
   navItems,
   navButtonTextColor,
 }) => {
+  const { authData } = useAuthData();
+
   const drawer = (
     <Box
       onClick={handleDrawerToggle}
@@ -28,69 +32,121 @@ const MobileDrawer: FC<IMobileDrawerProps> = ({
         py: 4,
       }}
     >
-      <List >
+      <List>
         {navItems.map((item, i) => (
           <ListItem key={i} disablePadding>
             <ListItemButton sx={{ textAlign: "center" }}>
-              <Link style={{color: 'inherit', textDecoration:'none', width: '100%'}} href={item.href}>
-              <ListItemText primary={item.name} />
+              <Link
+                style={{
+                  color: "inherit",
+                  textDecoration: "none",
+                  width: "100%",
+                }}
+                href={item.href}
+              >
+                <ListItemText primary={item.name} />
               </Link>
             </ListItemButton>
           </ListItem>
         ))}
       </List>
 
-      <Box
-        display="flex"
-        alignItems="center"
-        flexDirection="column-reverse"
-        padding={2}
-        gap={2}
-      >
-        {authNavItems.map((link, i) =>
-          link.name === "Log in" ? (
-            <Button
-              fullWidth
-              disableElevation
-              variant="contained"
-              sx={{
-                color: navButtonTextColor,
-                textTransform: "none",
-                backgroundColor: "rgba(64,87,109,.07)",
-                px: "0.5rem",
-                ":hover": {
-                  backgroundColor: theme.palette.secondary.main,
-                },
-              }}
-              key={i}
-            >
-              <Link
-                style={{ color: "inherit", textDecoration: "none" }}
-                color="inherit"
-                href={link.href}
+      {!authData && (
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection="column-reverse"
+          padding={2}
+          gap={2}
+        >
+          {authNavItems.map((link, i) =>
+            link.name === "Log in" ? (
+              <Button
+                fullWidth
+                disableElevation
+                variant="contained"
+                sx={{
+                  color: navButtonTextColor,
+                  textTransform: "none",
+                  backgroundColor: "rgba(64,87,109,.07)",
+                  px: "0.5rem",
+                  ":hover": {
+                    backgroundColor: theme.palette.secondary.main,
+                  },
+                }}
+                key={i}
               >
-                {link.name}
-              </Link>
-            </Button>
-          ) : (
-            <PrimaryButton
-              fullWidth
-              sx={{ textTransform: "none", px: "0.5rem" }}
-              disableElevation
-              variant="contained"
-              key={i}
-            >
-              <Link
-                style={{ color: "inherit", textDecoration: "none" }}
-                color="inherit"
-                href={link.href}
+                <Link
+                  style={{ color: "inherit", textDecoration: "none" }}
+                  color="inherit"
+                  href={link.href}
+                >
+                  {link.name}
+                </Link>
+              </Button>
+            ) : (
+              <PrimaryButton
+                fullWidth
+                sx={{ textTransform: "none", px: "0.5rem" }}
+                disableElevation
+                variant="contained"
+                key={i}
               >
-                {link.name}
-              </Link>
-            </PrimaryButton>
-          )
-        )}
-      </Box>
+                <Link
+                  style={{ color: "inherit", textDecoration: "none" }}
+                  color="inherit"
+                  href={link.href}
+                >
+                  {link.name}
+                </Link>
+              </PrimaryButton>
+            )
+          )}
+        </Box>
+      )}
+      {authData && (
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection="column"
+          padding={2}
+          gap={2}
+        >
+          <PrimaryButton
+            fullWidth
+            sx={{ textTransform: "none", px: "0.5rem" }}
+            disableElevation
+            variant="contained"
+          >
+            <Link
+              style={{ color: "inherit", textDecoration: "none" }}
+              color="inherit"
+              href={
+                isOrdinaryUser(authData) ? `/${authData.id}` : "/backoffice"
+              }
+            >
+              {isOrdinaryUser(authData) ? "Profile" : "Dashboard"}
+            </Link>
+          </PrimaryButton>
+          <Button
+            fullWidth
+            disableElevation
+            variant="contained"
+            sx={{
+              color: navButtonTextColor,
+              textTransform: "none",
+              backgroundColor: "rgba(64,87,109,.07)",
+              px: "0.5rem",
+              ":hover": {
+                backgroundColor: theme.palette.secondary.main,
+              },
+            }}
+            onClick={logout}
+          >
+            Log out
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 

@@ -5,11 +5,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Link from "next/link";
 import React, { FC, useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import Logo from "./Logo";
-import { Avatar } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import useAuthData from "../Shared/useAuthData";
+import GenericPopover from "../Shared/GenericPopover";
+import { isOrdinaryUser, logout } from "@/utils/functions";
 
 const NavBar: FC<INavBarProps> = ({
   authNavItems,
@@ -18,6 +22,14 @@ const NavBar: FC<INavBarProps> = ({
   navButtonTextColor,
 }) => {
   const [user, setuser] = useState(null);
+  const { authData } = useAuthData();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   return (
     <AppBar
@@ -62,50 +74,116 @@ const NavBar: FC<INavBarProps> = ({
         </Box>
         <Box display="flex" alignItems="center" gap={2}>
           <Box sx={{ display: { xs: "none", sm: "flex" } }} gap={2}>
-            {authNavItems.map((link, i) =>
-              link.name === "Log in" ? (
-                <Button
-                  disableElevation
-                  variant="contained"
-                  sx={{
-                    color: navButtonTextColor,
-                    textTransform: "none",
-                    backgroundColor: "rgba(64,87,109,.07)",
-                    width: "5rem",
-                    px: "0.5rem",
-                    ":hover": {
-                      backgroundColor: theme.palette.secondary.main,
-                    },
-                  }}
-                  key={i}
-                >
-                  <Link
-                    style={{ color: "inherit", textDecoration: "none" }}
-                    color="inherit"
-                    href={link.href}
+            {!authData &&
+              authNavItems.map((link, i) =>
+                link.name === "Log in" ? (
+                  <Button
+                    disableElevation
+                    variant="contained"
+                    sx={{
+                      color: navButtonTextColor,
+                      textTransform: "none",
+                      backgroundColor: "rgba(64,87,109,.07)",
+                      width: "5rem",
+                      px: "0.5rem",
+                      ":hover": {
+                        backgroundColor: theme.palette.secondary.main,
+                      },
+                    }}
+                    key={i}
                   >
-                    {link.name}
-                  </Link>
-                </Button>
-              ) : (
+                    <Link
+                      style={{ color: "inherit", textDecoration: "none" }}
+                      color="inherit"
+                      href={link.href}
+                    >
+                      {link.name}
+                    </Link>
+                  </Button>
+                ) : (
+                  <PrimaryButton
+                    sx={{ textTransform: "none", width: "5rem", px: "0.5rem" }}
+                    disableElevation
+                    variant="contained"
+                    key={i}
+                  >
+                    <Link
+                      style={{ color: "inherit", textDecoration: "none" }}
+                      color="inherit"
+                      href={link.href}
+                    >
+                      {link.name}
+                    </Link>
+                  </PrimaryButton>
+                )
+              )}
+          </Box>
+          <IconButton
+            onClick={handleClick}
+            sx={{
+              display: authData ? "flex" : "none",
+              flexDirection: "column",
+              gap: 0,
+              position: "relative",
+              border: "none",
+              outline: "none",
+              backgroundColor: "inherit",
+            }}
+          >
+            <Avatar />
+            <KeyboardArrowDownIcon
+              sx={{
+                width: "2.5rem",
+                height: "2.5rem",
+                position: "absolute",
+                top: "60%",
+                color: "GrayText",
+              }}
+            />
+          </IconButton>
+          {authData && (
+            <GenericPopover
+              anchorEl={anchorEl}
+              setAnchorEl={setAnchorEl}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            >
+              <Box py={2} px={1} gap={1} display="flex" flexDirection="column">
                 <PrimaryButton
-                  sx={{ textTransform: "none", width: "5rem", px: "0.5rem" }}
+                  sx={{
+                    textTransform: "none",
+                    backgroundColor: "GrayText",
+                  }}
                   disableElevation
                   variant="contained"
-                  key={i}
+                  size="small"
                 >
                   <Link
-                    style={{ color: "inherit", textDecoration: "none" }}
+                    style={{
+                      color: "inherit",
+                      textDecoration: "none",
+                    }}
                     color="inherit"
-                    href={link.href}
+                    href={
+                      isOrdinaryUser(authData)
+                        ? `/${authData.id}`
+                        : "/backoffice"
+                    }
                   >
-                    {link.name}
+                    {isOrdinaryUser(authData) ? "Profile" : "Dashboard"}
                   </Link>
                 </PrimaryButton>
-              )
-            )}
-          </Box>
-          <Avatar sx={{ display: user ? "block" : "none" }} />
+                <PrimaryButton
+                  size="small"
+                  sx={{ textTransform: "none", backgroundColor: "GrayText" }}
+                  disableElevation
+                  variant="contained"
+                  onClick={logout}
+                >
+                  Log out
+                </PrimaryButton>
+              </Box>
+            </GenericPopover>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

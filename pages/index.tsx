@@ -14,7 +14,7 @@ export const getStaticProps: GetStaticProps<{
     props: {
       properties: propertiesData,
     },
-    revalidate: 10,
+    revalidate: 60,
   };
 };
 
