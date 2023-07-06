@@ -6,11 +6,13 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/router";
 
 const PropertiesList: FC = () => {
   const theme = useTheme();
+  const router = useRouter();
   return (
-    <Box px={6}>
+    <Box py={6} px={6}>
       <PrimaryButton
         disableElevation
         sx={{ textTransform: "none" }}
@@ -24,6 +26,7 @@ const PropertiesList: FC = () => {
             }}
           />
         }
+        onClick={() => router.push("/backoffice/properties/add")}
       >
         Add Property
       </PrimaryButton>

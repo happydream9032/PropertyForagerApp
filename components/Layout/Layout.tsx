@@ -7,6 +7,11 @@ import MobileDrawer from "./MobileDrawer";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { useRouter } from "next/router";
+import useAuthData from "../Shared/useAuthData";
+import { _getCurrentUser } from "@/services/userService";
+import { IUser } from "@/types/user";
+import { FORAGER_USER_DATA } from "@/utils/constants";
+import { getUser, setUser } from "@/utils/functions";
 
 const drawerWidth = 240;
 const navItems = [
@@ -29,12 +34,27 @@ interface IProps extends React.PropsWithChildren {
 
 export default function Layout({ children, pageTitle }: IProps) {
   const router = useRouter();
+  const { authData } = useAuthData();
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+
+  React.useEffect(() => {
+    if (authData && !getUser()) {
+      (async () => {
+        try {
+          const response = await _getCurrentUser(authData.token);
+          const userData = response.data as IUser;
+          setUser(userData);
+        } catch (error) {
+          router.reload();
+        }
+      })();
+    }
+  }, [authData, router]);
 
   return (
     <>
@@ -54,6 +74,7 @@ export default function Layout({ children, pageTitle }: IProps) {
           navButtonTextColor={navButtonTextColor}
           handleDrawerToggle={handleDrawerToggle}
           authNavItems={authNavItems}
+          authData={authData}
         />
 
         <MobileDrawer
@@ -63,8 +84,9 @@ export default function Layout({ children, pageTitle }: IProps) {
           handleDrawerToggle={handleDrawerToggle}
           authNavItems={authNavItems}
           drawerWidth={drawerWidth}
+          authData={authData}
         />
-        <Box component="main" >
+        <Box component="main">
           <Toolbar sx={{ height: "6rem" }} />
           {children}
         </Box>

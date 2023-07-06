@@ -92,3 +92,21 @@ export type PropertiesListParams = {
 };
 
 export type ListPropertiesRequest = Partial<PropertiesListParams>;
+
+export type AddPropertyPayload = {
+  title: string;
+  description: string;
+  locality: string;
+  street: string;
+  propertyType: PropertyType;
+  price: number;
+  priceType: PropertyPriceType;
+  numberOfBedrooms: number;
+  numberOfBathrooms: number;
+  numberOfToilets: number;
+  parkingSpace: number;
+  totalLandArea: number;
+  furnished: boolean;
+  serviced: boolean;
+  shared: boolean;
+};

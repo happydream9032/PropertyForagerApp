@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -8,17 +8,11 @@ import DocumentIcon from "@mui/icons-material/Description";
 import PersonIcon from "@mui/icons-material/Person";
 import CustomLinkComponent from "../CustomLinkComponent";
 import { useTheme } from "@mui/material/styles";
-import { getCookie } from "@/utils/functions";
-import { FORAGER_AUTH_DATA } from "@/utils/constants";
-import { useRouter } from "next/router";
-import { IAuthenticateResponse } from "@/types/user";
 import useAuthData from "../Shared/useAuthData";
 
 const Dashboard: FC = () => {
   const theme = useTheme();
-  const router = useRouter();
 
-  // const [authData, setAuthData] = useState<IAuthenticateResponse | null>(null);
   const { authData } = useAuthData();
 
   const dashboardRoutes = [
@@ -51,12 +45,6 @@ const Dashboard: FC = () => {
       ),
     },
   ];
-
-  // useEffect(() => {
-  //   const cookieAuthData = getCookie(FORAGER_AUTH_DATA);
-  //   if (!cookieAuthData.length) router.push("/login");
-  //   setAuthData(JSON.parse(cookieAuthData) as IAuthenticateResponse);
-  // }, [router]);
 
   return (
     <Box sx={{ pt: 6, pb: 6 }}>

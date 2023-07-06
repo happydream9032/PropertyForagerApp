@@ -1,10 +1,10 @@
 import Layout from "@/components/Layout/Layout";
 import HomeComponent from "@/components/Home/Home";
 import { _getLatestProperties } from "@/services/propertyService";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { PropertiesList } from "@/types/property";
 
-export const getStaticProps: GetStaticProps<{
+export const getServerSideProps: GetServerSideProps<{
   properties: PropertiesList;
 }> = async () => {
   const response = await _getLatestProperties();
@@ -14,13 +14,12 @@ export const getStaticProps: GetStaticProps<{
     props: {
       properties: propertiesData,
     },
-    revalidate: 60,
   };
 };
 
 export default function Home({
   properties,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Layout pageTitle="Home">
       <HomeComponent properties={properties} />

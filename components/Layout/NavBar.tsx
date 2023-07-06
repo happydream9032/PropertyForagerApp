@@ -7,22 +7,24 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Link from "next/link";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import Logo from "./Logo";
 import Avatar from "@mui/material/Avatar";
-import useAuthData from "../Shared/useAuthData";
 import GenericPopover from "../Shared/GenericPopover";
-import { isOrdinaryUser, logout } from "@/utils/functions";
+import { getUser, isOrdinaryUser, logout } from "@/utils/functions";
+import { INavBarProps } from "@/types/navigation";
+import { IUser } from "@/types/user";
 
 const NavBar: FC<INavBarProps> = ({
   authNavItems,
   handleDrawerToggle,
   navItems,
   navButtonTextColor,
+  authData,
 }) => {
-  const [user, setuser] = useState(null);
-  const { authData } = useAuthData();
+  const [user, setUser] = useState<IUser | null>(null);
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -30,6 +32,10 @@ const NavBar: FC<INavBarProps> = ({
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
   return (
     <AppBar
@@ -130,7 +136,7 @@ const NavBar: FC<INavBarProps> = ({
               backgroundColor: "inherit",
             }}
           >
-            <Avatar />
+            <Avatar src={user?.avatarUrl} />
             <KeyboardArrowDownIcon
               sx={{
                 width: "2.5rem",

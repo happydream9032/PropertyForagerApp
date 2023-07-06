@@ -17,9 +17,10 @@ export default function Lpgin() {
     const previousPage = router.query["rt"] as string;
     const redirectPath = getAuthorizedRedirectPath(previousPage);
     if (!redirectPath) {
-      return router.replace("/");
+      router.replace("/");
+    } else {
+      router.replace(redirectPath);
     }
-    router.replace(redirectPath);
   };
 
   return (

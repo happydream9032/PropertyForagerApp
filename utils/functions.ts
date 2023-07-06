@@ -1,12 +1,12 @@
-import { IAuthenticateResponse } from "@/types/user";
-import { FORAGER_AUTH_DATA } from "./constants";
+import { IAuthenticateResponse, IUser } from "@/types/user";
+import { FORAGER_AUTH_DATA, FORAGER_USER_DATA } from "./constants";
 import dayjs from "dayjs";
 
 export const getCookie = (cookieName: string) => {
   let cookieData: string = "";
   const decodedCookies = decodeURIComponent(document.cookie).split(";");
   decodedCookies.forEach((cookie) => {
-    if (cookie.startsWith(cookieName)) {
+    if (cookie.trimStart().startsWith(cookieName)) {
       cookieData = cookie.split("=")[1]; //get the cookie value
     }
   });
@@ -23,4 +23,16 @@ export const logout = () => {
   )};expires=${dayjs().subtract(1, "second").toString()};`;
 
   window.location.href = "/";
+};
+
+export const setUser = (userData: IUser) => {
+  localStorage.setItem(FORAGER_USER_DATA, JSON.stringify(userData));
+};
+
+export const getUser = () => {
+  const user = localStorage.getItem(FORAGER_USER_DATA);
+  if (user) {
+    return JSON.parse(user) as IUser;
+  }
+  return null;
 };

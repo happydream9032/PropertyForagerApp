@@ -1,6 +1,7 @@
 import { IAuthenticateResponse } from "@/types/user";
 import { FORAGER_AUTH_DATA } from "@/utils/constants";
 import { getCookie } from "@/utils/functions";
+import { publicRoutes } from "@/utils/routes";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -10,12 +11,14 @@ const useAuthData = () => {
 
   useEffect(() => {
     const cookieAuthData = getCookie(FORAGER_AUTH_DATA);
-    if (!cookieAuthData.length) {
-      router.push("/login");
-    } else {
-      setAuthData(JSON.parse(cookieAuthData) as IAuthenticateResponse);
+    if (!publicRoutes.includes(router.pathname)) {
+      if (!cookieAuthData.length) {
+        router.push("/login");
+      } else {
+        setAuthData(JSON.parse(cookieAuthData) as IAuthenticateResponse);
+      }
     }
-  }, [router]);
+  }, []);
 
   return {
     authData,
