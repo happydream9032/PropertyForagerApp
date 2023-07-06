@@ -6,7 +6,16 @@ export const validRoutes = [
   "/signup",
   "/login",
   "/[username]",
-  "/backoffice",
+  "/backoffice/**",
+];
+
+export const publicRoutes = [
+  "/",
+  "/about",
+  "/contact",
+  "/properties",
+  "/signup",
+  "/login",
 ];
 
 export const getAuthorizedRedirectPath = (targetPathname: string) => {

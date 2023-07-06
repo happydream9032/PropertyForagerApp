@@ -58,6 +58,7 @@ const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
       const redirectPath = getAuthorizedRedirectPath(previousPage);
       if (!redirectPath) {
         if (!resData.roles.includes("Tenant")) {
+          console.log("going to backoffice");
           router.push("/backoffice");
         } else {
           router.push(`/${resData.userName.split("@")[0]}?pId=${resData.id}`);

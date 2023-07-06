@@ -9,8 +9,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import React, { FC } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
-import useAuthData from "../Shared/useAuthData";
 import { isOrdinaryUser, logout } from "@/utils/functions";
+import { IMobileDrawerProps } from "@/types/navigation";
 
 const MobileDrawer: FC<IMobileDrawerProps> = ({
   authNavItems,
@@ -19,9 +19,8 @@ const MobileDrawer: FC<IMobileDrawerProps> = ({
   mobileOpen,
   navItems,
   navButtonTextColor,
+  authData,
 }) => {
-  const { authData } = useAuthData();
-
   const drawer = (
     <Box
       onClick={handleDrawerToggle}
