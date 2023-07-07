@@ -1,7 +1,5 @@
 import { IUserRegistrationRequest } from "@/types/user";
 import { axiosInstance } from "./axiosConfig";
-import { getCookie } from "@/utils/functions";
-import { FORAGER_AUTH_DATA } from "@/utils/constants";
 
 export const _registerUser = async (payload: IUserRegistrationRequest) => {
   const response = await axiosInstance.post("/api/accounts/register", payload, {

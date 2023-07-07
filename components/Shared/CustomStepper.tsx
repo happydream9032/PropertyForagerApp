@@ -5,14 +5,15 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { IStepperProps } from "@/types/shared";
 
 const CustomStepper: React.FC<IStepperProps> = ({
-  handleBack,
-  handleNext,
-  handleFinish,
   activeStep,
   steps,
+  backButtonElement,
+  nextButtonElement,
 }) => {
   return (
     <Box sx={{ width: "100%" }}>
@@ -31,23 +32,16 @@ const CustomStepper: React.FC<IStepperProps> = ({
       </Stepper>
       <React.Fragment>
         {steps.map((step, index) =>
-          activeStep === index ? step.stepComponent : null
+          activeStep === index ? (
+            <React.Fragment key={index}>{step.stepComponent}</React.Fragment>
+          ) : null
         )}
       </React.Fragment>
       <React.Fragment>
         <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-          <Button
-            color="inherit"
-            disabled={activeStep === 0}
-            onClick={handleBack}
-            sx={{ mr: 1 }}
-          >
-            Back
-          </Button>
+          {backButtonElement}
           <Box sx={{ flex: "1 1 auto" }} />
-          <Button onClick={handleNext}>
-            {activeStep === steps.length - 1 ? "Finish" : "Next"}
-          </Button>
+          {nextButtonElement}
         </Box>
       </React.Fragment>
     </Box>

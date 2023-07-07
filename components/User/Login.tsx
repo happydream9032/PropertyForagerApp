@@ -13,7 +13,7 @@ import { _loginUser } from "@/services/userService";
 import { IAuthenticateResponse } from "@/types/user";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
-import { FORAGER_AUTH_DATA } from "@/utils/constants";
+import { FORAGER_AUTH_DATA, PREVIOUS_ROUTE_QUERY_KEY } from "@/utils/constants";
 import { getAuthorizedRedirectPath } from "@/utils/routes";
 import useAuthData from "../Shared/useAuthData";
 
@@ -54,11 +54,10 @@ const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
       document.cookie = `${FORAGER_AUTH_DATA}=${JSON.stringify(
         resData
       )};expires=${dayjs().add(60, "minute").toString()};`;
-      const previousPage = router.query["rt"] as string;
+      const previousPage = router.query[PREVIOUS_ROUTE_QUERY_KEY] as string;
       const redirectPath = getAuthorizedRedirectPath(previousPage);
       if (!redirectPath) {
         if (!resData.roles.includes("Tenant")) {
-          console.log("going to backoffice");
           router.push("/backoffice");
         } else {
           router.push(`/${resData.userName.split("@")[0]}?pId=${resData.id}`);
@@ -82,7 +81,7 @@ const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
   };
 
   if (authData) {
-    const previousPage = router.query["rt"] as string;
+    const previousPage = router.query[PREVIOUS_ROUTE_QUERY_KEY] as string;
     const redirectPath = getAuthorizedRedirectPath(previousPage);
     if (redirectPath) {
       router.push(redirectPath);

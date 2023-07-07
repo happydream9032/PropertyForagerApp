@@ -3,10 +3,13 @@ export const validRoutes = [
   "/about",
   "/contact",
   "/properties",
+  "/property/[propertyId]",
   "/signup",
   "/login",
   "/[username]",
-  "/backoffice/**",
+  "/backoffice",
+  "/backoffice/properties",
+  "/backoffice/properties/add",
 ];
 
 export const publicRoutes = [
@@ -14,6 +17,7 @@ export const publicRoutes = [
   "/about",
   "/contact",
   "/properties",
+  "/property/[propertyId]",
   "/signup",
   "/login",
 ];

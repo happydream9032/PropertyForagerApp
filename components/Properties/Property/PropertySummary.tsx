@@ -27,7 +27,6 @@ const PropertySummary: FC<IProperty> = (props) => {
 
   const handleForwardClick = () => {
     if (active === maxImageIndex) {
-      console.log("yes");
       setActive(0);
     } else {
       setActive((active) => active + 1);
