@@ -4,8 +4,12 @@ export type Steps = {
 };
 export interface IStepperProps {
   steps: Steps[];
-  handleNext: () => void;
-  handleBack: () => void;
-  handleFinish: () => void;
   activeStep: number;
+  backButtonElement: React.ReactElement;
+  nextButtonElement: React.ReactElement;
+}
+
+export interface ILocation {
+  location: string;
+  neighbourhood?: string;
 }

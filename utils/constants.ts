@@ -1,2 +1,4 @@
 export const FORAGER_AUTH_DATA = "FORAGER_AUTH_DATA";
 export const FORAGER_USER_DATA = "FORAGER_USER_DATA";
+
+export const PREVIOUS_ROUTE_QUERY_KEY = "rt";

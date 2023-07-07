@@ -16,8 +16,6 @@ const ImageViewModal: FC<IProps> = ({ open, setOpen, images }) => {
   const theme = useTheme();
 
   const [active, setActive] = useState(0);
-
-  console.log("active", images[active].imageURL);
   const handleClose = () => {
     setOpen(false);
   };
