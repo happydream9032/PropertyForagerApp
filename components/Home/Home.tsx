@@ -7,7 +7,6 @@ import Search from "./Search";
 import Image from "next/image";
 import sampleProperty from "../../public/prop.jpeg";
 import LatestProperties from "./LatestProperties";
-import { PropertiesList } from "@/types/property";
 
 const StyledImage = styled(Image)(({ theme }) => ({
   width: "100%",
@@ -22,7 +21,7 @@ const StyledHeading = styled(Typography)(({ theme }) => ({
   fontWeight: 500,
 }));
 
-const Home: FC<{ properties: PropertiesList }> = (props) => {
+const Home: FC = () => {
   const theme = useTheme();
   return (
     <Box sx={{ pt: "4rem" }}>
@@ -52,7 +51,7 @@ const Home: FC<{ properties: PropertiesList }> = (props) => {
       <Box sx={{ mt: 6 }}>
         <StyledImage src={sampleProperty} alt="Sample property" />
       </Box>
-      <LatestProperties {...props} />
+      <LatestProperties />
     </Box>
   );
 };

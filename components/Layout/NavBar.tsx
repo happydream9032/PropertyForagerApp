@@ -5,7 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Link from "next/link";
 import React, { FC, useEffect, useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
@@ -127,7 +127,7 @@ const NavBar: FC<INavBarProps> = ({
           <IconButton
             onClick={handleClick}
             sx={{
-              display: authData ? "flex" : "none",
+              display: { xs: "none", md: authData ? "flex" : "none" },
               flexDirection: "column",
               gap: 0,
               position: "relative",
@@ -137,7 +137,7 @@ const NavBar: FC<INavBarProps> = ({
             }}
           >
             <Avatar src={user?.avatarUrl} />
-            <KeyboardArrowDownIcon
+            <ArrowDropDownIcon
               sx={{
                 width: "2.5rem",
                 height: "2.5rem",

@@ -1,4 +1,8 @@
-import { AddPropertyPayload, ListPropertiesRequest } from "@/types/property";
+import {
+  AddPropertyPayload,
+  ListPropertiesRequest,
+  UploadPropertyImagesRequest,
+} from "@/types/property";
 import { axiosInstance } from "./axiosConfig";
 
 export const _getLatestProperties = async () => {
@@ -73,6 +77,29 @@ export const _saveDraft = async (
       headers: {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
+};
+
+export const _uploadPropertyImages = async (
+  payload: UploadPropertyImagesRequest,
+  authToken: string
+) => {
+  const formData = new FormData();
+  payload.images.forEach((file, index) => {
+    formData.append(`file${index + 1}`, file, file.name);
+  });
+  const response = await axiosInstance.post(
+    `/api/properties/${payload.propertyId}/uploadImages`,
+    { ...payload.images },
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "multipart/form-data",
       },
     }
   );

@@ -110,3 +110,8 @@ export type AddPropertyPayload = {
   serviced?: boolean;
   shared?: boolean;
 };
+
+export type UploadPropertyImagesRequest = {
+  propertyId: string;
+  images: File[];
+};

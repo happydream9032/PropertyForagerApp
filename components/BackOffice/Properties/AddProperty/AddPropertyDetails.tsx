@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import TextFieldWithoutLabel from "@/components/TextFields/TextFieldWithoutLabel";
@@ -16,23 +16,144 @@ import {
 import StyledTextArea from "@/components/TextFields/StyledTextArea";
 import CustomAutoComplete from "@/components/Shared/CustomAutoComplete";
 import { ILocation } from "@/types/shared";
+import { getPropertyAdditionValidationSchema } from "@/utils/validationSchema";
+import axios from "axios";
 
 interface IProps {
-  propertyDetails: AddPropertyPayload;
-  handleChange: (
+  initiateSaveDetailsRequest: boolean;
+  setPropertyId: (propertyId: string) => void;
+  setActiveStep: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const initialPropertyDetailsPayloadState: AddPropertyPayload = {
+  title: "",
+  description: "",
+  locality: "",
+  street: "",
+  propertyType: PropertyType.Flat,
+  price: "",
+  priceType: PropertyPriceType.PerAnnum,
+  numberOfBedrooms: 3,
+  numberOfBathrooms: 3,
+  numberOfToilets: 4,
+  parkingSpace: 3,
+  totalLandArea: "",
+  furnished: false,
+  serviced: false,
+  shared: false,
+};
+
+const AddPropertyDetails: FC<IProps> = ({
+  initiateSaveDetailsRequest,
+  setActiveStep,
+  setPropertyId,
+}) => {
+  const throttle = useRef(false);
+  const [propertyDetails, setPropertyDetails] = useState<AddPropertyPayload>(
+    initialPropertyDetailsPayloadState
+  );
+  const [selectedLocationValue, setSelectedLocationValue] =
+    useState<ILocation | null>(null);
+  const [locationOptions, setLocationOptions] = useState<readonly ILocation[]>(
+    []
+  );
+  const [response, setResponse] = useState({
+    error: false,
+    success: false,
+    message: "",
+  });
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
+
+  const handleChange = (
     e:
       | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
       | SelectChangeEvent<unknown>
-  ) => void;
-  handleCheckBox: (e: ChangeEvent<HTMLInputElement>, checked: boolean) => void;
-  locationOptions: readonly ILocation[];
-  setLocationOptions: (options: readonly ILocation[]) => void;
-  selectedLocationValue: ILocation | null;
-  setSelectedLocationValue: (value: ILocation | null) => void;
-  setLocationInputValue: (inputValue: string) => void;
-}
+  ) => {
+    setPropertyDetails({ ...propertyDetails, [e.target.name]: e.target.value });
+  };
 
-const AddPropertyDetails: FC<IProps> = (props) => {
+  const handleCheckBox = (
+    e: ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => {
+    setPropertyDetails({ ...propertyDetails, [e.target.name]: checked });
+  };
+
+  const setLocationInputValue = (input: string) => {
+    setPropertyDetails({ ...propertyDetails, locality: input });
+  };
+
+  async function validatePropertyDetailsInputs(data: AddPropertyPayload) {
+    const schema = getPropertyAdditionValidationSchema();
+    const validatedData = await schema.validate(data);
+    return validatedData;
+  }
+
+  async function saveDraft() {
+    // setIsSavingDraft(true);
+    try {
+      // const validatedInputs = await validatePropertyDetailsInputs(
+      //   propertyDetails
+      // );
+      // const res = await _saveDraft(validatedInputs, authData!.token);
+      // setIsSavingDraft(false);
+      // if (res.status !== 200 && res.status !== 201) {
+      //   setResponse({ ...response, error: true, message: res.data.Message });
+      //   return;
+      // }
+      // setResponse({
+      //   ...response,
+      //   success: true,
+      //   message: `Property successfully saved as draft`,
+      // });
+      setActiveStep((activeStep) => activeStep + 1);
+      return;
+    } catch (error) {
+      setIsSavingDraft(false);
+      setResponse({
+        ...response,
+        error: true,
+        success: false,
+        message: "Something went wrong on our end. Please try again.",
+      });
+    } finally {
+      setTimeout(() => {
+        setResponse({ error: false, success: false, message: "" });
+      }, 9000);
+    }
+  }
+
+  useEffect(() => {
+    let active = true;
+    if (propertyDetails.locality === "") {
+      setLocationOptions(selectedLocationValue ? [selectedLocationValue] : []);
+      return undefined;
+    }
+
+    if (throttle.current) {
+      return;
+    }
+
+    throttle.current = true;
+    setTimeout(() => {
+      throttle.current = false;
+      axios
+        .get(
+          `${process.env.LOCATION_API}?keywords=${propertyDetails.locality}type=localities-sub-localities-only&dataType=json`
+        )
+        .then((response) => {
+          console.log("response", response);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    }, 500);
+
+    return () => {
+      active = false;
+    };
+  }, [setLocationOptions, propertyDetails.locality, selectedLocationValue]);
+
   return (
     <Box py={4} px={2} display="flex" flexDirection="column" gap={3}>
       <Grid spacing={3} container>
@@ -41,16 +162,16 @@ const AddPropertyDetails: FC<IProps> = (props) => {
           <TextFieldWithoutLabel
             id="title"
             name="title"
-            value={props.propertyDetails.title}
-            onChange={props.handleChange}
+            value={propertyDetails.title}
+            onChange={handleChange}
             fullWidth
             required
             helperText={
-              !props.propertyDetails.title.trim().length
+              !propertyDetails.title.trim().length
                 ? "Property title cannot be empty"
                 : "Note: Do not add location information here"
             }
-            error={!props.propertyDetails.title.trim().length}
+            error={!propertyDetails.title.trim().length}
             placeholder="e.g 3 Bedroom Flats with swimming pool"
           />
         </Grid>
@@ -61,9 +182,9 @@ const AddPropertyDetails: FC<IProps> = (props) => {
               labelId="property-type-select-label"
               id="property-type-select"
               name="propertyType"
-              value={props.propertyDetails.propertyType}
+              value={propertyDetails.propertyType}
               // label="Property Type"
-              onChange={props.handleChange}
+              onChange={handleChange}
               required
             >
               <MenuItem value={PropertyType.Flat}>Flat</MenuItem>
@@ -79,12 +200,12 @@ const AddPropertyDetails: FC<IProps> = (props) => {
             id="locality"
             name="locality"
             placeholder="Add locality/area"
-            inputValue={props.propertyDetails.locality}
-            setInputValue={props.setLocationInputValue}
-            options={props.locationOptions}
-            setOptions={props.setLocationOptions}
-            selectedValue={props.selectedLocationValue}
-            setSelectedValue={props.setSelectedLocationValue}
+            inputValue={propertyDetails.locality}
+            setInputValue={setLocationInputValue}
+            options={locationOptions}
+            setOptions={setLocationOptions}
+            selectedValue={selectedLocationValue}
+            setSelectedValue={setSelectedLocationValue}
           />
         </Grid>
         <Grid display="flex" flexDirection="column" item xs={12} sm={6}>
@@ -92,15 +213,15 @@ const AddPropertyDetails: FC<IProps> = (props) => {
           <TextFieldWithoutLabel
             name="street"
             id="street"
-            value={props.propertyDetails.street}
-            onChange={props.handleChange}
+            value={propertyDetails.street}
+            onChange={handleChange}
             required
             helperText={
-              !props.propertyDetails.street.trim().length
+              !propertyDetails.street.trim().length
                 ? "Property street/road cannot be empty"
                 : ""
             }
-            error={!props.propertyDetails.street.trim().length}
+            error={!propertyDetails.street.trim().length}
           />
         </Grid>
       </Grid>
@@ -112,15 +233,15 @@ const AddPropertyDetails: FC<IProps> = (props) => {
             id="Bedrooms"
             name="numberOfBedrooms"
             placeholder="e.g. 3"
-            value={props.propertyDetails.numberOfBedrooms}
-            onChange={props.handleChange}
+            value={propertyDetails.numberOfBedrooms}
+            onChange={handleChange}
             required
             helperText={
-              !props.propertyDetails.numberOfBedrooms
+              !propertyDetails.numberOfBedrooms
                 ? "Number of bedrooms must be a number greater than 0"
                 : ""
             }
-            error={!props.propertyDetails.numberOfBedrooms}
+            error={!propertyDetails.numberOfBedrooms}
           />
         </Grid>
         <Grid display="flex" flexDirection="column" item xs={12} sm={4}>
@@ -130,15 +251,15 @@ const AddPropertyDetails: FC<IProps> = (props) => {
             id="Bathrooms"
             name="numberOfBathrooms"
             placeholder="e.g. 3"
-            value={props.propertyDetails.numberOfBathrooms}
-            onChange={props.handleChange}
+            value={propertyDetails.numberOfBathrooms}
+            onChange={handleChange}
             required
             helperText={
-              !props.propertyDetails.numberOfBathrooms
+              !propertyDetails.numberOfBathrooms
                 ? "Number of bathrooms must be a number greater than 0"
                 : ""
             }
-            error={!props.propertyDetails.numberOfBathrooms}
+            error={!propertyDetails.numberOfBathrooms}
           />
         </Grid>
         <Grid display="flex" flexDirection="column" item xs={12} sm={4}>
@@ -148,15 +269,15 @@ const AddPropertyDetails: FC<IProps> = (props) => {
             id="Toilets"
             name="numberOfToilets"
             placeholder="e.g. 4"
-            value={props.propertyDetails.numberOfToilets}
-            onChange={props.handleChange}
+            value={propertyDetails.numberOfToilets}
+            onChange={handleChange}
             required
             helperText={
-              !props.propertyDetails.numberOfToilets
+              !propertyDetails.numberOfToilets
                 ? "Number of toilets must be a number greater than 0"
                 : ""
             }
-            error={!props.propertyDetails.numberOfToilets}
+            error={!propertyDetails.numberOfToilets}
           />
         </Grid>
       </Grid>
@@ -168,15 +289,15 @@ const AddPropertyDetails: FC<IProps> = (props) => {
             id="Parking"
             name="parkingSpace"
             placeholder="e.g. 5"
-            value={props.propertyDetails.parkingSpace}
-            onChange={props.handleChange}
+            value={propertyDetails.parkingSpace}
+            onChange={handleChange}
             required
             helperText={
-              !props.propertyDetails.parkingSpace
+              !propertyDetails.parkingSpace
                 ? "Parking space must be a number greater than 0"
                 : ""
             }
-            error={!props.propertyDetails.parkingSpace}
+            error={!propertyDetails.parkingSpace}
           />
         </Grid>
         <Grid display="flex" flexDirection="column" item xs={12} sm={6}>
@@ -185,15 +306,15 @@ const AddPropertyDetails: FC<IProps> = (props) => {
             id="LandArea"
             placeholder="e.g. 500"
             name="totalLandArea"
-            value={props.propertyDetails.totalLandArea}
-            onChange={props.handleChange}
+            value={propertyDetails.totalLandArea}
+            onChange={handleChange}
             required
             helperText={
-              !props.propertyDetails.totalLandArea
+              !propertyDetails.totalLandArea
                 ? "Total land area must be a number greater than 0"
                 : ""
             }
-            error={!props.propertyDetails.totalLandArea}
+            error={!propertyDetails.totalLandArea}
           />
         </Grid>
       </Grid>
@@ -204,15 +325,15 @@ const AddPropertyDetails: FC<IProps> = (props) => {
             id="Price"
             placeholder="e.g 500000"
             name="price"
-            value={props.propertyDetails.price}
-            onChange={props.handleChange}
+            value={propertyDetails.price}
+            onChange={handleChange}
             required
             helperText={
-              !props.propertyDetails.price
+              !propertyDetails.price
                 ? "Price must be a number greater than 0"
                 : ""
             }
-            error={!props.propertyDetails.price}
+            error={!propertyDetails.price}
           />
         </Grid>
         <Grid display="flex" flexDirection="column" item xs={12} sm={3}>
@@ -222,9 +343,9 @@ const AddPropertyDetails: FC<IProps> = (props) => {
               labelId="property-price-type-select-label"
               id="property-price-type-select"
               name="priceType"
-              value={props.propertyDetails.priceType}
+              value={propertyDetails.priceType}
               // label="Property Type"
-              onChange={props.handleChange}
+              onChange={handleChange}
               required
             >
               <MenuItem value={PropertyPriceType.PerAnnum}>Per Annum</MenuItem>
@@ -235,17 +356,15 @@ const AddPropertyDetails: FC<IProps> = (props) => {
       </Grid>
       <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
         <FormControlLabel
-          control={
-            <Checkbox onChange={props.handleCheckBox} name="furnished" />
-          }
+          control={<Checkbox onChange={handleCheckBox} name="furnished" />}
           label="Furnished"
         />
         <FormControlLabel
-          control={<Checkbox onChange={props.handleCheckBox} name="serviced" />}
+          control={<Checkbox onChange={handleCheckBox} name="serviced" />}
           label="Serviced"
         />
         <FormControlLabel
-          control={<Checkbox onChange={props.handleCheckBox} name="shared" />}
+          control={<Checkbox onChange={handleCheckBox} name="shared" />}
           label="Shared"
         />
       </FormGroup>
@@ -259,8 +378,8 @@ const AddPropertyDetails: FC<IProps> = (props) => {
             resize: "none",
           }}
           name="description"
-          value={props.propertyDetails.description}
-          onChange={props.handleChange}
+          value={propertyDetails.description}
+          onChange={handleChange}
           minRows={6}
           maxRows={10}
           required
