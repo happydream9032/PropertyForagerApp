@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useMemo } from "react";
 // import Box from "@mui/material/Box";
 import Autocomplete from "@mui/material/Autocomplete";
 import { ILocation } from "@/types/shared";
@@ -15,41 +15,48 @@ interface IProps {
   inputValue: string;
   setInputValue: (inputValue: string) => void;
 }
-const CustomAutoComplete: FC<IProps> = (props) => {
+const CustomAutoComplete: FC<IProps> = ({
+  inputValue,
+  name,
+  options,
+  placeholder,
+  selectedValue,
+  setInputValue,
+  setOptions,
+  setSelectedValue,
+  id,
+}) => {
   return (
     <Autocomplete
-      id={props.id ?? "custom-autocomplete"}
+      id={id ?? "custom-autocomplete"}
       getOptionLabel={(option) =>
         typeof option === "string" ? option : option.location
       }
       filterOptions={(x) => x}
-      options={props.options}
+      options={options}
       autoComplete
       includeInputInList
       filterSelectedOptions
-      value={props.selectedValue}
+      value={selectedValue}
       noOptionsText="No localities"
       onChange={(event: any, newValue: ILocation | null) => {
-        props.setOptions(
-          newValue ? [newValue, ...props.options] : props.options
-        );
-        props.setSelectedValue(newValue);
+        setOptions(newValue ? [newValue, ...options] : options);
+        setSelectedValue(newValue);
       }}
       onInputChange={(event, newInputValue) => {
-        props.setInputValue(newInputValue);
+        setInputValue(newInputValue);
       }}
       renderInput={(params) => (
         <TextFieldWithLabel
-          name={props.name}
+          name={name}
           {...params}
-          label={props.placeholder}
+          placeholder={placeholder}
           fullWidth
           helperText={
-            !props.inputValue.trim().length
-              ? "Property location cannot be empty"
-              : ""
+            !inputValue.trim().length ? "This field cannot be empty" : ""
           }
-          error={!props.inputValue.trim().length}
+          required
+          error={!inputValue.trim().length}
         />
       )}
     />
