@@ -59,8 +59,11 @@ const AddProperty = () => {
       stepComponent: (
         <AddPropertyDetails
           initiateSaveDetailsRequest={initiateSaveDetailsRequest}
+          setInitiateSaveDetailsRequest={setInitiateSaveDetailsRequest}
           setPropertyId={(propertyId) => setPropertyId(propertyId)}
           setActiveStep={setActiveStep}
+          authData={authData}
+          setIsSavingDraft={setIsSavingDraft}
         />
       ),
     },

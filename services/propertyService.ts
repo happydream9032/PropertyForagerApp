@@ -71,7 +71,7 @@ export const _saveDraft = async (
 ) => {
   const response = await axiosInstance.post(
     "/api/properties/saveDraft",
-    { payload },
+    { ...payload },
     {
       validateStatus: (status) => status < 500,
       headers: {
@@ -100,6 +100,20 @@ export const _uploadPropertyImages = async (
       headers: {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response;
+};
+
+export const _searchLocations = async (keyword: string) => {
+  const response = await axiosInstance.get(
+    `/api/properties/searchLocations?searchKeyWord=${keyword}`,
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        "Content-Type": "application/json",
       },
     }
   );

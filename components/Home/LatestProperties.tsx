@@ -25,7 +25,7 @@ const LatestProperties: FC = () => {
     })();
   }, []);
 
-  return (
+  return latestProperties.length > 0 ? (
     <Box mt={2} sx={{ py: 2, px: { xs: 2, sm: 6 } }}>
       <Box
         sx={{ flexDirection: { xs: "column", md: "row" } }}
@@ -99,7 +99,7 @@ const LatestProperties: FC = () => {
         </Grid>
       )}
     </Box>
-  );
+  ) : null;
 };
 
 export default LatestProperties;
