@@ -11,5 +11,4 @@ export interface IStepperProps {
 
 export interface ILocation {
   location: string;
-  neighbourhood?: string;
 }

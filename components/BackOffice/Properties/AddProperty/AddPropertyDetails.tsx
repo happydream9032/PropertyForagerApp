@@ -17,12 +17,17 @@ import StyledTextArea from "@/components/TextFields/StyledTextArea";
 import CustomAutoComplete from "@/components/Shared/CustomAutoComplete";
 import { ILocation } from "@/types/shared";
 import { getPropertyAdditionValidationSchema } from "@/utils/validationSchema";
-import axios from "axios";
+import { _saveDraft, _searchLocations } from "@/services/propertyService";
+import { IAuthenticateResponse } from "@/types/user";
+import Snackbar from "@mui/material/Snackbar";
 
 interface IProps {
   initiateSaveDetailsRequest: boolean;
+  setInitiateSaveDetailsRequest: React.Dispatch<React.SetStateAction<boolean>>;
   setPropertyId: (propertyId: string) => void;
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
+  authData: IAuthenticateResponse | null;
+  setIsSavingDraft: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const initialPropertyDetailsPayloadState: AddPropertyPayload = {
@@ -45,31 +50,42 @@ const initialPropertyDetailsPayloadState: AddPropertyPayload = {
 
 const AddPropertyDetails: FC<IProps> = ({
   initiateSaveDetailsRequest,
+  setInitiateSaveDetailsRequest,
   setActiveStep,
   setPropertyId,
+  authData,
+  setIsSavingDraft,
 }) => {
   const throttle = useRef(false);
   const [propertyDetails, setPropertyDetails] = useState<AddPropertyPayload>(
     initialPropertyDetailsPayloadState
   );
-  const [selectedLocationValue, setSelectedLocationValue] =
-    useState<ILocation | null>(null);
-  const [locationOptions, setLocationOptions] = useState<readonly ILocation[]>(
-    []
-  );
+  const [selectedLocationValue, setSelectedLocationValue] = useState<
+    string | null
+  >(null);
+  const [locationOptions, setLocationOptions] = useState<readonly string[]>([]);
   const [response, setResponse] = useState({
     error: false,
     success: false,
     message: "",
   });
-  const [isSavingDraft, setIsSavingDraft] = useState(false);
 
   const handleChange = (
     e:
       | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
       | SelectChangeEvent<unknown>
   ) => {
-    setPropertyDetails({ ...propertyDetails, [e.target.name]: e.target.value });
+    if (e.target.name === "totalLandArea" || e.target.name === "price") {
+      setPropertyDetails({
+        ...propertyDetails,
+        [e.target.name]: Number(e.target.value),
+      });
+    } else {
+      setPropertyDetails({
+        ...propertyDetails,
+        [e.target.name]: e.target.value,
+      });
+    }
   };
 
   const handleCheckBox = (
@@ -83,45 +99,72 @@ const AddPropertyDetails: FC<IProps> = ({
     setPropertyDetails({ ...propertyDetails, locality: input });
   };
 
-  async function validatePropertyDetailsInputs(data: AddPropertyPayload) {
-    const schema = getPropertyAdditionValidationSchema();
-    const validatedData = await schema.validate(data);
-    return validatedData;
-  }
+  useEffect(() => {
+    if (!initiateSaveDetailsRequest) return;
 
-  async function saveDraft() {
-    // setIsSavingDraft(true);
-    try {
-      // const validatedInputs = await validatePropertyDetailsInputs(
-      //   propertyDetails
-      // );
-      // const res = await _saveDraft(validatedInputs, authData!.token);
-      // setIsSavingDraft(false);
-      // if (res.status !== 200 && res.status !== 201) {
-      //   setResponse({ ...response, error: true, message: res.data.Message });
-      //   return;
-      // }
-      // setResponse({
-      //   ...response,
-      //   success: true,
-      //   message: `Property successfully saved as draft`,
-      // });
-      setActiveStep((activeStep) => activeStep + 1);
-      return;
-    } catch (error) {
-      setIsSavingDraft(false);
-      setResponse({
-        ...response,
-        error: true,
-        success: false,
-        message: "Something went wrong on our end. Please try again.",
-      });
-    } finally {
-      setTimeout(() => {
-        setResponse({ error: false, success: false, message: "" });
-      }, 9000);
-    }
-  }
+    const saveDraft = async () => {
+      const schema = getPropertyAdditionValidationSchema();
+      schema
+        .validate(propertyDetails)
+        .then(async (validatedInputs) => {
+          console.log("validatedInputs", validatedInputs);
+          setIsSavingDraft(true);
+          try {
+            const res = await _saveDraft(validatedInputs, authData!.token);
+            setIsSavingDraft(false);
+
+            if (res.status !== 200 && res.status !== 201) {
+              setIsSavingDraft(false);
+              setInitiateSaveDetailsRequest(false);
+              setResponse({
+                ...response,
+                error: true,
+                message: res.data.Message,
+              });
+              return;
+            }
+            setResponse({
+              ...response,
+              success: true,
+              message: `Property successfully saved as draft`,
+            });
+            setActiveStep((activeStep) => activeStep + 1);
+          } catch (error) {
+            setIsSavingDraft(false);
+            setInitiateSaveDetailsRequest(false);
+            setResponse({
+              ...response,
+              error: true,
+              success: false,
+              message: "Something went wrong on our end. Please try again.",
+            });
+          }
+        })
+        .catch((error) => {
+          setInitiateSaveDetailsRequest(false);
+          setResponse({
+            ...response,
+            error: true,
+            success: false,
+            message: error.message,
+          });
+        })
+        .finally(() => {
+          setInitiateSaveDetailsRequest(false);
+          setTimeout(() => {
+            setResponse({ error: false, success: false, message: "" });
+          }, 9000);
+        });
+    };
+    saveDraft();
+  }, [
+    authData,
+    initiateSaveDetailsRequest,
+    propertyDetails,
+    response,
+    setActiveStep,
+    setInitiateSaveDetailsRequest,
+  ]);
 
   useEffect(() => {
     let active = true;
@@ -137,12 +180,12 @@ const AddPropertyDetails: FC<IProps> = ({
     throttle.current = true;
     setTimeout(() => {
       throttle.current = false;
-      axios
-        .get(
-          `${process.env.LOCATION_API}?keywords=${propertyDetails.locality}type=localities-sub-localities-only&dataType=json`
-        )
+      _searchLocations(propertyDetails.locality)
         .then((response) => {
-          console.log("response", response);
+          const locations = response.data.data.map(
+            ({ location }: ILocation) => location
+          );
+          setLocationOptions(locations);
         })
         .catch((error) => {
           console.log("error", error);
@@ -156,6 +199,13 @@ const AddPropertyDetails: FC<IProps> = ({
 
   return (
     <Box py={4} px={2} display="flex" flexDirection="column" gap={3}>
+      <Snackbar
+        open={response.message.length > 0}
+        anchorOrigin={{ horizontal: "center", vertical: "top" }}
+        autoHideDuration={3000}
+        message={response.message}
+      />
+
       <Grid spacing={3} container>
         <Grid display="flex" flexDirection="column" item xs={12} sm={7}>
           <label htmlFor="title">Title</label>

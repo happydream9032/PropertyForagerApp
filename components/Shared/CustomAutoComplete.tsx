@@ -1,17 +1,16 @@
-import React, { FC, useEffect, useMemo } from "react";
+import React, { FC } from "react";
 // import Box from "@mui/material/Box";
 import Autocomplete from "@mui/material/Autocomplete";
-import { ILocation } from "@/types/shared";
 import TextFieldWithLabel from "../TextFields/TextFieldWithLabel";
 
 interface IProps {
   id?: string;
   name: string;
   placeholder: string;
-  options: readonly ILocation[];
-  setOptions: (options: readonly ILocation[]) => void;
-  selectedValue: ILocation | null;
-  setSelectedValue: (value: ILocation | null) => void;
+  options: readonly string[];
+  setOptions: (options: readonly string[]) => void;
+  selectedValue: string | null;
+  setSelectedValue: (value: string | null) => void;
   inputValue: string;
   setInputValue: (inputValue: string) => void;
 }
@@ -30,7 +29,7 @@ const CustomAutoComplete: FC<IProps> = ({
     <Autocomplete
       id={id ?? "custom-autocomplete"}
       getOptionLabel={(option) =>
-        typeof option === "string" ? option : option.location
+        typeof option === "string" ? option : option
       }
       filterOptions={(x) => x}
       options={options}
@@ -39,7 +38,7 @@ const CustomAutoComplete: FC<IProps> = ({
       filterSelectedOptions
       value={selectedValue}
       noOptionsText="No localities"
-      onChange={(event: any, newValue: ILocation | null) => {
+      onChange={(event: any, newValue: string | null) => {
         setOptions(newValue ? [newValue, ...options] : options);
         setSelectedValue(newValue);
       }}

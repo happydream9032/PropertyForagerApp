@@ -38,7 +38,7 @@ const PropertyDisplayCard: FC<PropertyOverview> = (props) => {
     >
       <Box
         sx={{
-          backgroundImage: `url("${props.images[0].imageURL}")`,
+          backgroundImage: `url("${props.images[0]?.imageURL}")`,
           width: "100%",
           height: "250px",
           objectFit: "scale-down",
