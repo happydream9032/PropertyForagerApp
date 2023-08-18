@@ -4,6 +4,7 @@ import {
   UploadPropertyImagesRequest,
 } from "@/types/property";
 import { axiosInstance } from "./axiosConfig";
+import { AxiosProgressEvent } from "axios";
 
 export const _getLatestProperties = async () => {
   const response = await axiosInstance.post(
@@ -86,12 +87,14 @@ export const _saveDraft = async (
 
 export const _uploadPropertyImages = async (
   payload: UploadPropertyImagesRequest,
-  authToken: string
+  authToken: string,
+  onUploadProgress: (progressEvent: AxiosProgressEvent) => void
 ) => {
   const formData = new FormData();
   payload.images.forEach((file, index) => {
     formData.append(`file${index + 1}`, file, file.name);
   });
+
   const response = await axiosInstance.post(
     `/api/properties/${payload.propertyId}/uploadImages`,
     { ...payload.images },
@@ -101,6 +104,7 @@ export const _uploadPropertyImages = async (
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "multipart/form-data",
       },
+      onUploadProgress,
     }
   );
 

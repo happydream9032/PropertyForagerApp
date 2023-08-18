@@ -72,7 +72,7 @@ const PropertySummary: FC<IProperty> = (props) => {
               borderRadius: "1.2rem",
             }}
             component="img"
-            src={props.images[active].imageURL}
+            src={props.images[active]?.imageURL}
             sizes="(max-width: 479px) 83vw, (max-width: 767px) 87vw, (max-width: 991px) 79vw, (max-width: 1279px) 82vw, 1046.390625px"
           ></Box>
           <StyledSvg

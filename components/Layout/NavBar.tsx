@@ -80,7 +80,7 @@ const NavBar: FC<INavBarProps> = ({
         </Box>
         <Box display="flex" alignItems="center" gap={2}>
           <Box sx={{ display: { xs: "none", sm: "flex" } }} gap={2}>
-            {!authData &&
+            {!Boolean(authData) &&
               authNavItems.map((link, i) =>
                 link.name === "Log in" ? (
                   <Button
