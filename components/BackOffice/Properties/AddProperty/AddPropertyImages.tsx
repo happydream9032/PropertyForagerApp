@@ -6,18 +6,16 @@ import StyledFileInput from "@/components/Shared/StyledFileInput";
 import Button from "@mui/material/Button";
 
 interface IProps {
-  propertyId: string;
-  startImageUpload: boolean;
+  isUploadingImages: boolean;
+  images: [] | File[];
+  setImages: React.Dispatch<React.SetStateAction<[] | File[]>>;
 }
-const AddPropertyImages: FC<IProps> = ({ propertyId, startImageUpload }) => {
+const AddPropertyImages: FC<IProps> = ({
+  isUploadingImages,
+  images,
+  setImages,
+}) => {
   const [imagesForPreview, setImagesForPreview] = useState<string[]>([]);
-  const [images, setImages] = useState<File[] | []>([]);
-  const [isUploadingImages, setIsUploadingImages] = useState(false);
-  const [response, setResponse] = useState({
-    error: false,
-    success: false,
-    message: "",
-  });
 
   const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -32,25 +30,6 @@ const AddPropertyImages: FC<IProps> = ({ propertyId, startImageUpload }) => {
       }
     }
   };
-
-  async function uploadImages() {
-    setIsUploadingImages(true);
-    try {
-      // const response = await _uploadPropertyImages()
-    } catch (error) {
-      setIsUploadingImages(false);
-      setResponse({
-        ...response,
-        error: true,
-        success: false,
-        message: "Something went wrong on our end. Please try again.",
-      });
-    } finally {
-      setTimeout(() => {
-        setResponse({ error: false, success: false, message: "" });
-      }, 9000);
-    }
-  }
 
   return (
     <Box py={4} px={2} display="flex" flexDirection="column" gap={3}>

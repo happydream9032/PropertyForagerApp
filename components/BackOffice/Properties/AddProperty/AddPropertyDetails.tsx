@@ -22,44 +22,16 @@ import { IAuthenticateResponse } from "@/types/user";
 import Snackbar from "@mui/material/Snackbar";
 
 interface IProps {
-  initiateSaveDetailsRequest: boolean;
-  setInitiateSaveDetailsRequest: React.Dispatch<React.SetStateAction<boolean>>;
-  setPropertyId: (propertyId: string) => void;
-  setActiveStep: React.Dispatch<React.SetStateAction<number>>;
-  authData: IAuthenticateResponse | null;
-  setIsSavingDraft: React.Dispatch<React.SetStateAction<boolean>>;
+  propertyDetails: AddPropertyPayload;
+  setPropertyDetails: React.Dispatch<React.SetStateAction<AddPropertyPayload>>;
 }
 
-const initialPropertyDetailsPayloadState: AddPropertyPayload = {
-  title: "",
-  description: "",
-  locality: "",
-  street: "",
-  propertyType: PropertyType.Flat,
-  price: "",
-  priceType: PropertyPriceType.PerAnnum,
-  numberOfBedrooms: 3,
-  numberOfBathrooms: 3,
-  numberOfToilets: 4,
-  parkingSpace: 3,
-  totalLandArea: "",
-  furnished: false,
-  serviced: false,
-  shared: false,
-};
-
 const AddPropertyDetails: FC<IProps> = ({
-  initiateSaveDetailsRequest,
-  setInitiateSaveDetailsRequest,
-  setActiveStep,
-  setPropertyId,
-  authData,
-  setIsSavingDraft,
+  propertyDetails,
+  setPropertyDetails,
 }) => {
   const throttle = useRef(false);
-  const [propertyDetails, setPropertyDetails] = useState<AddPropertyPayload>(
-    initialPropertyDetailsPayloadState
-  );
+
   const [selectedLocationValue, setSelectedLocationValue] = useState<
     string | null
   >(null);
@@ -98,73 +70,6 @@ const AddPropertyDetails: FC<IProps> = ({
   const setLocationInputValue = (input: string) => {
     setPropertyDetails({ ...propertyDetails, locality: input });
   };
-
-  useEffect(() => {
-    if (!initiateSaveDetailsRequest) return;
-
-    const saveDraft = async () => {
-      const schema = getPropertyAdditionValidationSchema();
-      schema
-        .validate(propertyDetails)
-        .then(async (validatedInputs) => {
-          console.log("validatedInputs", validatedInputs);
-          setIsSavingDraft(true);
-          try {
-            const res = await _saveDraft(validatedInputs, authData!.token);
-            setIsSavingDraft(false);
-
-            if (res.status !== 200 && res.status !== 201) {
-              setIsSavingDraft(false);
-              setInitiateSaveDetailsRequest(false);
-              setResponse({
-                ...response,
-                error: true,
-                message: res.data.Message,
-              });
-              return;
-            }
-            setResponse({
-              ...response,
-              success: true,
-              message: `Property successfully saved as draft`,
-            });
-            setActiveStep((activeStep) => activeStep + 1);
-          } catch (error) {
-            setIsSavingDraft(false);
-            setInitiateSaveDetailsRequest(false);
-            setResponse({
-              ...response,
-              error: true,
-              success: false,
-              message: "Something went wrong on our end. Please try again.",
-            });
-          }
-        })
-        .catch((error) => {
-          setInitiateSaveDetailsRequest(false);
-          setResponse({
-            ...response,
-            error: true,
-            success: false,
-            message: error.message,
-          });
-        })
-        .finally(() => {
-          setInitiateSaveDetailsRequest(false);
-          setTimeout(() => {
-            setResponse({ error: false, success: false, message: "" });
-          }, 9000);
-        });
-    };
-    saveDraft();
-  }, [
-    authData,
-    initiateSaveDetailsRequest,
-    propertyDetails,
-    response,
-    setActiveStep,
-    setInitiateSaveDetailsRequest,
-  ]);
 
   useEffect(() => {
     let active = true;

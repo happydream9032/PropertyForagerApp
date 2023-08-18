@@ -11,11 +11,11 @@ const useAuthData = () => {
 
   useEffect(() => {
     const cookieAuthData = getCookie(FORAGER_AUTH_DATA);
-    if (!publicRoutes.includes(router.pathname)) {
-      if (!cookieAuthData.length) {
+    if (cookieAuthData.length) {
+      setAuthData(JSON.parse(cookieAuthData) as IAuthenticateResponse);
+    } else {
+      if (!publicRoutes.includes(router.pathname)) {
         router.push(`/login?${PREVIOUS_ROUTE_QUERY_KEY}=${router.pathname}`);
-      } else {
-        setAuthData(JSON.parse(cookieAuthData) as IAuthenticateResponse);
       }
     }
   }, []);
