@@ -1,34 +1,10 @@
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/material";
 import Box from "@mui/material/Box";
-import InputBase from "@mui/material/InputBase";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import PrimaryButton from "../Buttons/PrimaryButton";
 import { useRouter } from "next/router";
-
-const StyledSearchInput = styled(InputBase)(({ theme }) => ({
-  width: "100%",
-  padding: "0.5rem",
-  "& .MuiInputBase-input": {
-    "::placeholder": {
-      color: "#212121",
-      fontWeight: 600,
-    },
-  },
-}));
-
-const StyledSearchBox = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flex: 1,
-  borderRadius: "3rem",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: 1,
-  border: "1px solid #212121",
-  padding: theme.spacing(0.5),
-  paddingLeft: theme.spacing(2),
-}));
+import StyledSearchComponent from "../Shared/StyledSearchComponent";
 
 const Search = () => {
   const router = useRouter();
@@ -41,7 +17,14 @@ const Search = () => {
         budget.
         <br /> Let us help you find your dream home
       </Typography>
-      <StyledSearchBox
+      <StyledSearchComponent
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        handleSearch={() =>
+          router.push(`/properties?searchValue=${searchValue}`)
+        }
+      />
+      {/* <StyledSearchBox
         onSubmit={(e) => {
           e.preventDefault();
           router.push(`/properties?searchValue=${searchValue}`);
@@ -76,7 +59,7 @@ const Search = () => {
         >
           Search
         </PrimaryButton>
-      </StyledSearchBox>
+      </StyledSearchBox> */}
     </Box>
   );
 };

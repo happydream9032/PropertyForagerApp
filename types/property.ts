@@ -93,6 +93,19 @@ export type PropertiesListParams = {
 
 export type ListPropertiesRequest = Partial<PropertiesListParams>;
 
+export type GetPropertiesForAgencyRequest = {
+  agencyId: string;
+  pageNumber?: number;
+  pageSize?: number;
+  searchKeyword?: string;
+  status?: PropertyStatus;
+};
+
+export type GetPropertiesForOwnerRequest = Omit<
+  GetPropertiesForAgencyRequest,
+  "agencyId"
+> & { ownerId: string };
+
 export type AddPropertyPayload = {
   title: string;
   description: string;

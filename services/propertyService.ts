@@ -1,5 +1,7 @@
 import {
   AddPropertyPayload,
+  GetPropertiesForAgencyRequest,
+  GetPropertiesForOwnerRequest,
   ListPropertiesRequest,
   UploadPropertyImagesRequest,
 } from "@/types/property";
@@ -13,6 +15,25 @@ export const _getLatestProperties = async () => {
     {
       validateStatus: (status) => status < 500,
       headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
+};
+
+export const _getPropertiesForAgency = async (
+  payload: GetPropertiesForAgencyRequest | GetPropertiesForOwnerRequest,
+  authToken: string
+) => {
+  const response = await axiosInstance.post(
+    "/api/properties/propertiesForAgency",
+    { ...payload },
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       },
     }
