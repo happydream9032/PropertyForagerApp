@@ -7,12 +7,20 @@ import AddIcon from "@mui/icons-material/Add";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
-import { PropertiesList as PropertiesForAgency } from "@/types/property";
+import {
+  GetPropertiesForAgencyRequest,
+  GetPropertiesForOwnerRequest,
+  PropertiesList as PropertiesForAgency,
+  PropertyStatus,
+} from "@/types/property";
 import StyledSearchComponent from "@/components/Shared/StyledSearchComponent";
 import PropertiesLoader from "@/components/Shared/PropertiesLoader";
 import { _getPropertiesForAgency } from "@/services/propertyService";
 import useAuthData from "@/components/Shared/useAuthData";
-import { getUser } from "@/utils/functions";
+import { getAgency, getUser } from "@/utils/functions";
+import { IUser } from "@/types/user";
+import { IAgency } from "@/types/agency";
+import PropertyDisplayCard from "@/components/Shared/PropertyDisplayCard";
 
 const PropertiesList: FC = () => {
   const theme = useTheme();
@@ -21,19 +29,62 @@ const PropertiesList: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [properties, setProperties] = useState<PropertiesForAgency>([]);
+  const [isFetchingProperties, setIsFetchingProperties] = useState(false);
+  const [response, setResponse] = useState({
+    error: false,
+    success: false,
+    message: "",
+  });
 
-  // useEffect(() => {
-  //   const user = getUser()
-  // })
-  // useEffect(() => {
-  //   (async () => {
-  //     setIsLoading(true);
-  //     const response = await _getPropertiesForAgency({},authData!.token);
-  //     const propertiesData = response.data.properties;
-  //     setProperties(propertiesData);
-  //     setIsLoading(false);
-  //   })();
-  // }, []);
+  async function getPropertiesForAgency(
+    requestObj: GetPropertiesForAgencyRequest & GetPropertiesForOwnerRequest
+  ) {
+    setIsFetchingProperties(true);
+    let payload = {} as GetPropertiesForAgencyRequest &
+      GetPropertiesForOwnerRequest;
+
+    (
+      Object.keys(requestObj) as Array<
+        keyof (GetPropertiesForAgencyRequest & GetPropertiesForOwnerRequest)
+      >
+    ).forEach((key) => {
+      if (requestObj[key]) {
+        payload = { ...payload, [key]: requestObj[key] };
+      }
+    });
+    try {
+      const res = await _getPropertiesForAgency(payload, authData!.token);
+      if (res.status !== 200) {
+        return setResponse({
+          error: true,
+          message: "Error fetching properties",
+          success: false,
+        });
+      }
+      const propertiesData = res.data.data;
+      setProperties(propertiesData);
+    } catch (error) {
+    } finally {
+      setIsFetchingProperties(false);
+    }
+  }
+
+  useEffect(() => {
+    const user = getUser();
+    const agency = getAgency();
+    if (authData && (user || agency)) {
+      (async () => {
+        let payload = {} as GetPropertiesForAgencyRequest &
+          GetPropertiesForOwnerRequest;
+        if (authData.roles.includes("Agency") && agency) {
+          payload.agencyId = agency.id;
+        } else {
+          payload.ownerId = authData.id;
+        }
+        await getPropertiesForAgency(payload);
+      })();
+    }
+  }, [authData]);
 
   return (
     <Box py={6} px={6}>
@@ -66,7 +117,30 @@ const PropertiesList: FC = () => {
           />
         </Grid>
       </Grid>
-      {isLoading ? <PropertiesLoader /> : <Grid container></Grid>}
+      {isFetchingProperties ? (
+        <PropertiesLoader />
+      ) : (
+        <Grid mt={2} container spacing={4}>
+          {properties.map((p) => (
+            <Grid xs={12} md={6} lg={4} item key={p.id}>
+              <PropertyDisplayCard
+                authData={authData}
+                id={p.id}
+                images={p.images}
+                locality={p.locality}
+                numberOfBathrooms={p.numberOfBathrooms}
+                numberOfBedrooms={p.numberOfBedrooms}
+                price={p.price}
+                priceType={p.priceType}
+                street={p.street}
+                title={p.title}
+                description={p.description}
+                totalLandArea={p.totalLandArea}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </Box>
   );
 };

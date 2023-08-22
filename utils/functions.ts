@@ -1,6 +1,11 @@
 import { IAuthenticateResponse, IUser } from "@/types/user";
-import { FORAGER_AUTH_DATA, FORAGER_USER_DATA } from "./constants";
+import {
+  FORAGER_AGENCY_DATA,
+  FORAGER_AUTH_DATA,
+  FORAGER_USER_DATA,
+} from "./constants";
 import dayjs from "dayjs";
+import { IAgency } from "@/types/agency";
 
 export const getCookie = (cookieName: string) => {
   let cookieData: string = "";
@@ -21,7 +26,7 @@ export const logout = () => {
   document.cookie = `${FORAGER_AUTH_DATA}=${JSON.stringify(
     {}
   )};expires=${dayjs().subtract(1, "second").toString()};`;
-
+  localStorage.clear();
   window.location.href = "/";
 };
 
@@ -33,6 +38,18 @@ export const getUser = () => {
   const user = localStorage.getItem(FORAGER_USER_DATA);
   if (user) {
     return JSON.parse(user) as IUser;
+  }
+  return null;
+};
+
+export const setAgency = (agencyData: IAgency) => {
+  localStorage.setItem(FORAGER_AGENCY_DATA, JSON.stringify(agencyData));
+};
+
+export const getAgency = () => {
+  const agency = localStorage.getItem(FORAGER_AGENCY_DATA);
+  if (agency) {
+    return JSON.parse(agency) as IAgency;
   }
   return null;
 };
