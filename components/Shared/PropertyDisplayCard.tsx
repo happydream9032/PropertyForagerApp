@@ -10,22 +10,19 @@ import BedroomIcon from "@mui/icons-material/BedroomParentOutlined";
 import BathroomIcon from "@mui/icons-material/BathroomOutlined";
 import { PropertyOverview, PropertyPriceType } from "@/types/property";
 import Link from "next/link";
+import { IAuthenticateResponse } from "@/types/user";
+import PrimaryButton from "../Buttons/PrimaryButton";
 
-const PropertyDisplayCard: FC<PropertyOverview> = (props) => {
+const PropertyDisplayCard: FC<
+  PropertyOverview & { authData: IAuthenticateResponse | null }
+> = (props) => {
   const theme = useTheme();
+
   return (
     <Box
       sx={{
         cursor: "pointer",
         textDecoration: "none",
-        "& .MuiBox-root": {
-          ":hover": {
-            transform: "scale(1.03)",
-            transitionProperty: "transform",
-            transitionTimingFunction: theme.transitions.easing.easeInOut,
-            transitionDuration: "150ms",
-          },
-        },
         ":hover": {
           transform: "scale(1.03)",
           transitionProperty: "transform",
@@ -44,6 +41,7 @@ const PropertyDisplayCard: FC<PropertyOverview> = (props) => {
           objectFit: "scale-down",
           borderRadius: "0.5rem",
           backgroundSize: "cover",
+          backgroundColor: theme.palette.primary.main,
         }}
       ></Box>
       <Paper
@@ -57,11 +55,31 @@ const PropertyDisplayCard: FC<PropertyOverview> = (props) => {
           padding: "1rem",
         }}
       >
-        <Typography fontWeight={500} variant="h4" component="h4">
+        <Typography
+          sx={{
+            width: "inherit",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+          fontWeight={500}
+          variant="h4"
+          component="h4"
+        >
           {props.title}
         </Typography>
         {props.description && (
-          <Typography variant="body1" component="p" my={2}>
+          <Typography
+            sx={{
+              width: "inherit",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+            variant="body1"
+            component="p"
+            my={2}
+          >
             {props.description}
           </Typography>
         )}
@@ -195,6 +213,34 @@ const PropertyDisplayCard: FC<PropertyOverview> = (props) => {
             {props.street},{props.locality}
           </Typography>
         </Typography>
+        {props.authData && props.authData.roles.includes("Agency") && (
+          <Box pt={2}>
+            <Divider sx={{ my: 1 }} />
+            <Box display="flex" gap={2} justifyContent="space-between">
+              <PrimaryButton
+                disableElevation
+                sx={{ borderRadius: "0.6rem" }}
+                fullWidth
+                variant="contained"
+              >
+                Edit
+              </PrimaryButton>
+              <PrimaryButton
+                disableElevation
+                sx={{
+                  borderRadius: "0.6rem",
+                  color: "red",
+                  backgroundColor: "rgba(64,87,109,.07)",
+                  ":hover": { backgroundColor: "red", color: "white" },
+                }}
+                fullWidth
+                variant="contained"
+              >
+                Delete
+              </PrimaryButton>
+            </Box>
+          </Box>
+        )}
       </Paper>
     </Box>
   );

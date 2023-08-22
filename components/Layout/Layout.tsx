@@ -8,10 +8,9 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { useRouter } from "next/router";
 import useAuthData from "../Shared/useAuthData";
-import { _getCurrentUser } from "@/services/userService";
-import { IUser } from "@/types/user";
-import { FORAGER_USER_DATA } from "@/utils/constants";
-import { getUser, setUser } from "@/utils/functions";
+import { _getAgency, _getCurrentUser } from "@/services/userService";
+import { getUser, setAgency, setUser } from "@/utils/functions";
+import { IAgency } from "@/types/agency";
 
 const drawerWidth = 240;
 const navItems = [
@@ -46,9 +45,17 @@ export default function Layout({ children, pageTitle }: IProps) {
     if (authData && !getUser()) {
       (async () => {
         try {
-          const response = await _getCurrentUser(authData.token);
-          const userData = response.data as IUser;
-          setUser(userData);
+          if (authData.roles.includes("Agency")) {
+            const response = await _getAgency(authData.token);
+            const agencyData = response.data as IAgency;
+            setAgency(agencyData);
+            setUser(agencyData.owner);
+          } else {
+            const response = await _getCurrentUser(authData.token);
+            const userData = response.data;
+            setUser(userData);
+          }
+          router.reload();
         } catch (error) {
           router.reload();
         }

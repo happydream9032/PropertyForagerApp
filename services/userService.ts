@@ -35,3 +35,14 @@ export const _getCurrentUser = async (authToken: string) => {
 
   return response;
 };
+
+export const _getAgency = async (authToken: string) => {
+  const response = await axiosInstance.get("/api/agencies", {
+    validateStatus: (status) => status < 500,
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+
+  return response;
+};

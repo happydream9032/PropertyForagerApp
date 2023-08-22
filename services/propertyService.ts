@@ -24,7 +24,7 @@ export const _getLatestProperties = async () => {
 };
 
 export const _getPropertiesForAgency = async (
-  payload: GetPropertiesForAgencyRequest | GetPropertiesForOwnerRequest,
+  payload: GetPropertiesForAgencyRequest & GetPropertiesForOwnerRequest,
   authToken: string
 ) => {
   const response = await axiosInstance.post(
