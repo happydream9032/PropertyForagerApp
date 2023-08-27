@@ -3,6 +3,7 @@ import {
   GetPropertiesForAgencyRequest,
   GetPropertiesForOwnerRequest,
   ListPropertiesRequest,
+  UpdatePropertyPayload,
   UploadPropertyImagesRequest,
 } from "@/types/property";
 import { axiosInstance } from "./axiosConfig";
@@ -106,6 +107,25 @@ export const _saveDraft = async (
   return response;
 };
 
+export const _updateProperty = async (
+  payload: UpdatePropertyPayload,
+  authToken: string
+) => {
+  const response = await axiosInstance.put(
+    "/api/properties/update",
+    { ...payload },
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
+};
+
 export const _uploadPropertyImages = async (
   payload: UploadPropertyImagesRequest,
   authToken: string,
@@ -126,6 +146,44 @@ export const _uploadPropertyImages = async (
         "Content-Type": "multipart/form-data",
       },
       onUploadProgress,
+    }
+  );
+
+  return response;
+};
+
+export const _deletePropertyImage = async (
+  propertyId: string,
+  fileId: string,
+  authToken: string
+) => {
+  const response = await axiosInstance.post(
+    "/api/properties/deleteImage",
+    { propertyId, fileId },
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
+};
+
+export const _deleteProperty = async (
+  propertyId: string,
+  authToken: string
+) => {
+  const response = await axiosInstance.delete(
+    `/api/properties/${propertyId}/delete`,
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
     }
   );
 

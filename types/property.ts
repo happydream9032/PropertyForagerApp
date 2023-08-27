@@ -25,12 +25,13 @@ export interface IPropertyImage extends BaseType {
   id: string;
   imageURL: string;
   verified: boolean;
+  fileId: string;
 }
 
 export interface IProperty extends BaseType {
   id: string;
   title: string;
-  description?: string;
+  description: string;
   locality: string;
   street: string;
   status: PropertyStatus;
@@ -41,8 +42,8 @@ export interface IProperty extends BaseType {
   numberOfBedrooms: number;
   numberOfBathrooms: number;
   numberOfToilets: number;
-  parkingSpace?: number;
-  totalLandArea?: number;
+  parkingSpace: number;
+  totalLandArea: number;
   furnished?: boolean;
   serviced?: boolean;
   shared?: boolean;
@@ -128,3 +129,7 @@ export type UploadPropertyImagesRequest = {
   propertyId: string;
   images: File[];
 };
+
+export type UpdatePropertyPayload = {
+  propertyId: string;
+} & Partial<AddPropertyPayload>;

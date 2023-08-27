@@ -10,6 +10,7 @@ import React, { FC } from "react";
 import { useTheme } from "@mui/material/styles";
 import { Divider, useMediaQuery } from "@mui/material";
 import Logo from "./Logo";
+import { NavItem } from "@/types/navigation";
 
 type Props = {
   navItems: Array<NavItem>;

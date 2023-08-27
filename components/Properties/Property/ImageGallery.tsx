@@ -61,6 +61,9 @@ const ImageGallery: FC<{ images: IPropertyImage[] }> = ({ images }) => {
               sx={{
                 display: "inline-block",
                 maxWidth: "100%",
+                maxHeight: "100%",
+                height: "15rem",
+                width: "100%",
                 verticalAlign: "middle",
                 overflow: "clip",
                 overflowClipMargin: "content-box",

@@ -10,6 +10,7 @@ export const validRoutes = [
   "/backoffice",
   "/backoffice/properties",
   "/backoffice/properties/add",
+  "/backoffice/properties/edit",
 ];
 
 export const publicRoutes = [
