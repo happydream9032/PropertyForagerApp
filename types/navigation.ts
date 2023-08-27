@@ -1,6 +1,6 @@
 import { IAuthenticateResponse } from "./user";
 
-type NavItem = {
+export type NavItem = {
   name: string;
   href: string;
 };

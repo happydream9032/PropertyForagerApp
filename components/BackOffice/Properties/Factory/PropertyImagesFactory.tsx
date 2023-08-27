@@ -1,21 +1,33 @@
 import React, { ChangeEvent, FC, useState } from "react";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import StyledFileInput from "@/components/Shared/StyledFileInput";
 import Button from "@mui/material/Button";
+import ImagesPreviewComponent from "@/components/Shared/ImagesPreviewComponent";
+import { IPropertyImage } from "@/types/property";
+import { IAuthenticateResponse } from "@/types/user";
 
 interface IProps {
+  actionType: "create" | "edit";
+  authData: IAuthenticateResponse | null;
+  propertyId: string;
   isUploadingImages: boolean;
   images: [] | File[];
   setImages: React.Dispatch<React.SetStateAction<[] | File[]>>;
+  existingPropertyImageUrls?: IPropertyImage[];
 }
-const AddPropertyImages: FC<IProps> = ({
+const PropertyImagesFactory: FC<IProps> = ({
   isUploadingImages,
+  actionType,
   images,
   setImages,
+  existingPropertyImageUrls,
+  propertyId,
+  authData,
 }) => {
-  const [imagesForPreview, setImagesForPreview] = useState<string[]>([]);
+  const [imagesForPreview, setImagesForPreview] = useState<IPropertyImage[]>(
+    existingPropertyImageUrls ?? []
+  );
 
   const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -23,8 +35,17 @@ const AddPropertyImages: FC<IProps> = ({
       for (let index = 0; index < files.length; index++) {
         const file = files[index];
         const imgPrev = URL.createObjectURL(file);
+        const imagePreviewObj: IPropertyImage = {
+          CreatedAt: new Date(),
+          CreatedByUserId: "",
+          fileId: "",
+          id: "",
+          imageURL: imgPrev,
+          UpdatedAt: new Date(),
+          verified: true,
+        };
         setImagesForPreview((imagesForPreview) =>
-          imagesForPreview.concat([imgPrev])
+          imagesForPreview.concat([imagePreviewObj])
         );
         setImages([...images, file]);
       }
@@ -48,52 +69,15 @@ const AddPropertyImages: FC<IProps> = ({
           >
             Pictures Preview
           </Typography>
-          <Grid container spacing={2}>
-            {imagesForPreview.map((imagePrev, index) => (
-              <Grid key={index} item xs={12} sm={6} lg={4}>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "17rem",
-                    position: "relative",
-                    padding: "0.2rem",
-                    border: "1px solid lightgray",
-                    borderRadius: "5px",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                    }}
-                    component="img"
-                    src={imagePrev}
-                  ></Box>
-                  <Button
-                    disableElevation
-                    size="small"
-                    variant="contained"
-                    sx={{
-                      position: "absolute",
-                      right: 4,
-                      top: 2,
-                      textTransform: "none",
-                    }}
-                    onClick={() => {
-                      setImagesForPreview((imagesForPreview) =>
-                        imagesForPreview.filter((_, i) => i !== index)
-                      );
-                      setImages((images) =>
-                        images.filter((_, i) => i !== index)
-                      );
-                    }}
-                  >
-                    Remove
-                  </Button>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
+          <ImagesPreviewComponent
+            authData={authData}
+            actionType={actionType}
+            propertyId={propertyId}
+            imagesForPreview={imagesForPreview}
+            setImages={setImages}
+            setImagesForPreview={setImagesForPreview}
+            key="ImagesPreviewForEdit"
+          />
         </Box>
       )}
       <label
@@ -105,7 +89,6 @@ const AddPropertyImages: FC<IProps> = ({
           id="file-input"
           type="file"
           sx={{ display: "none" }}
-          multiple
           onChange={handleUpload}
           disabled={imagesForPreview.length === 3 || isUploadingImages}
         />
@@ -124,4 +107,4 @@ const AddPropertyImages: FC<IProps> = ({
   );
 };
 
-export default AddPropertyImages;
+export default PropertyImagesFactory;

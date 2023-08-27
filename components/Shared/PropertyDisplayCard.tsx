@@ -1,10 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
+import { Theme, useTheme } from "@mui/material/styles";
 import LocationIcon from "@mui/icons-material/LocationOnOutlined";
 import BedroomIcon from "@mui/icons-material/BedroomParentOutlined";
 import BathroomIcon from "@mui/icons-material/BathroomOutlined";
@@ -12,13 +12,25 @@ import { PropertyOverview, PropertyPriceType } from "@/types/property";
 import Link from "next/link";
 import { IAuthenticateResponse } from "@/types/user";
 import PrimaryButton from "../Buttons/PrimaryButton";
+import { isOrdinaryUser } from "@/utils/functions";
+import { useRouter } from "next/router";
+import { _deleteProperty } from "@/services/propertyService";
+import SimpleDialog from "../Modals/SimpleDialog";
 
-const PropertyDisplayCard: FC<
-  PropertyOverview & { authData: IAuthenticateResponse | null }
-> = (props) => {
-  const theme = useTheme();
-
-  return (
+interface IProps extends React.PropsWithChildren {
+  theme: Theme;
+  href: string;
+}
+const PropertyDetailsCardWrapper: FC<IProps> = ({ children, theme, href }) => {
+  return window.location.pathname === "/backoffice/properties" ? (
+    <Box
+      sx={{
+        textDecoration: "none",
+      }}
+    >
+      {children}
+    </Box>
+  ) : (
     <Box
       sx={{
         cursor: "pointer",
@@ -30,8 +42,48 @@ const PropertyDisplayCard: FC<
           transitionDuration: "150ms",
         },
       }}
-      href={`/property/${props.id}`}
+      href={href}
       component={Link}
+    >
+      {children}
+    </Box>
+  );
+};
+
+const PropertyDisplayCard: FC<
+  PropertyOverview & { authData: IAuthenticateResponse | null }
+> = (props) => {
+  const theme = useTheme();
+  const router = useRouter();
+
+  const [openModal, setOpenModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handlePropertyDelete = async (propertyId: string) => {
+    if (!props.authData) return;
+    setIsDeleting(true);
+    try {
+      const response = await _deleteProperty(propertyId, props.authData.token);
+      setMessage(response.data.Message);
+    } catch (error) {
+      setMessage("Oops! We encountered an error while deleting property");
+    } finally {
+      setIsDeleting(false);
+      setTimeout(() => {
+        setMessage("");
+        router.reload();
+      }, 4000);
+    }
+  };
+
+  const closeModal = () => setOpenModal(false);
+
+  return (
+    <PropertyDetailsCardWrapper
+      key="PropertyDetailsCard"
+      theme={theme}
+      href={`/property/${props.id}`}
     >
       <Box
         sx={{
@@ -213,15 +265,44 @@ const PropertyDisplayCard: FC<
             {props.street},{props.locality}
           </Typography>
         </Typography>
-        {props.authData && props.authData.roles.includes("Agency") && (
+        {props.authData && !isOrdinaryUser(props.authData) && (
           <Box pt={2}>
             <Divider sx={{ my: 1 }} />
+            <PrimaryButton
+              disableElevation
+              sx={{
+                borderRadius: "0.6rem",
+                my: 2,
+                ":hover": {
+                  backgroundColor: theme.palette.primary.main,
+                  color: "white",
+                },
+              }}
+              fullWidth
+              variant="outlined"
+              onClick={() => router.push(`/property/${props.id}`)}
+            >
+              View Details
+            </PrimaryButton>
             <Box display="flex" gap={2} justifyContent="space-between">
               <PrimaryButton
                 disableElevation
-                sx={{ borderRadius: "0.6rem" }}
+                sx={{
+                  borderRadius: "0.6rem",
+                  color: theme.palette.primary.main,
+                  backgroundColor: "rgba(64,87,109,.07)",
+                  ":hover": {
+                    backgroundColor: theme.palette.primary.main,
+                    color: "white",
+                  },
+                }}
                 fullWidth
                 variant="contained"
+                onClick={() =>
+                  router.push(
+                    `/backoffice/properties/edit?propertyId=${props.id}`
+                  )
+                }
               >
                 Edit
               </PrimaryButton>
@@ -235,6 +316,7 @@ const PropertyDisplayCard: FC<
                 }}
                 fullWidth
                 variant="contained"
+                onClick={() => setOpenModal(true)}
               >
                 Delete
               </PrimaryButton>
@@ -242,7 +324,47 @@ const PropertyDisplayCard: FC<
           </Box>
         )}
       </Paper>
-    </Box>
+      <SimpleDialog
+        modalTitle="Delete Property"
+        open={openModal}
+        handleClose={closeModal}
+      >
+        {message && (
+          <Typography fontWeight={500} color="red">
+            {message}
+          </Typography>
+        )}
+        <Typography>Are you sure you want to delete this property?</Typography>
+        <Box pt={3} display="flex" gap={2} justifyContent="space-between">
+          <PrimaryButton
+            disableElevation
+            sx={{
+              borderRadius: "0.6rem",
+            }}
+            fullWidth
+            variant="contained"
+            onClick={closeModal}
+          >
+            Cancel
+          </PrimaryButton>
+          <PrimaryButton
+            disableElevation
+            sx={{
+              borderRadius: "0.6rem",
+              color: "red",
+              backgroundColor: "rgba(64,87,109,.07)",
+              ":hover": { backgroundColor: "red", color: "white" },
+            }}
+            disabled={isDeleting || !props.authData}
+            fullWidth
+            variant="contained"
+            onClick={() => handlePropertyDelete(props.id)}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </PrimaryButton>
+        </Box>
+      </SimpleDialog>
+    </PropertyDetailsCardWrapper>
   );
 };
 

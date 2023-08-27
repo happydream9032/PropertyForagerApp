@@ -16,9 +16,7 @@ import {
 import StyledTextArea from "@/components/TextFields/StyledTextArea";
 import CustomAutoComplete from "@/components/Shared/CustomAutoComplete";
 import { ILocation } from "@/types/shared";
-import { getPropertyAdditionValidationSchema } from "@/utils/validationSchema";
 import { _saveDraft, _searchLocations } from "@/services/propertyService";
-import { IAuthenticateResponse } from "@/types/user";
 import Snackbar from "@mui/material/Snackbar";
 
 interface IProps {
@@ -26,7 +24,7 @@ interface IProps {
   setPropertyDetails: React.Dispatch<React.SetStateAction<AddPropertyPayload>>;
 }
 
-const AddPropertyDetails: FC<IProps> = ({
+const PropertyDetailsFactory: FC<IProps> = ({
   propertyDetails,
   setPropertyDetails,
 }) => {
@@ -159,7 +157,7 @@ const AddPropertyDetails: FC<IProps> = ({
             setInputValue={setLocationInputValue}
             options={locationOptions}
             setOptions={setLocationOptions}
-            selectedValue={selectedLocationValue}
+            selectedValue={selectedLocationValue || propertyDetails.locality}
             setSelectedValue={setSelectedLocationValue}
           />
         </Grid>
@@ -311,15 +309,33 @@ const AddPropertyDetails: FC<IProps> = ({
       </Grid>
       <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
         <FormControlLabel
-          control={<Checkbox onChange={handleCheckBox} name="furnished" />}
+          control={
+            <Checkbox
+              checked={propertyDetails.furnished}
+              onChange={handleCheckBox}
+              name="furnished"
+            />
+          }
           label="Furnished"
         />
         <FormControlLabel
-          control={<Checkbox onChange={handleCheckBox} name="serviced" />}
+          control={
+            <Checkbox
+              checked={propertyDetails.serviced}
+              onChange={handleCheckBox}
+              name="serviced"
+            />
+          }
           label="Serviced"
         />
         <FormControlLabel
-          control={<Checkbox onChange={handleCheckBox} name="shared" />}
+          control={
+            <Checkbox
+              checked={propertyDetails.shared}
+              onChange={handleCheckBox}
+              name="shared"
+            />
+          }
           label="Shared"
         />
       </FormGroup>
@@ -344,4 +360,4 @@ const AddPropertyDetails: FC<IProps> = ({
   );
 };
 
-export default AddPropertyDetails;
+export default PropertyDetailsFactory;

@@ -82,6 +82,7 @@ const LatestProperties: FC = () => {
           {latestProperties.map((p) => (
             <Grid xs={12} md={6} lg={4} item key={p.id}>
               <PropertyDisplayCard
+                authData={null}
                 id={p.id}
                 images={p.images}
                 locality={p.locality}
