@@ -58,40 +58,71 @@ const SignUp: FC<IProps> = ({ openSignupForm = false, handleClose }) => {
     setSignUpState({ ...signupState, [e.target.name]: e.target.value });
   };
 
-  const validateSignUp = async (data: IUserRegistrationRequest) => {
-    const schema = getSignUpValidationSchema(data);
-    const validatedData = await schema.validate(data);
-    return validatedData;
+  const handleSignup = async () => {
+    const schema = getSignUpValidationSchema(signupState);
+    schema
+      .validate(signupState)
+      .then(async (validInputs) => {
+        setIsRegistering(true);
+        try {
+          const res = await _registerUser(validInputs);
+          setIsRegistering(false);
+          if (res.status !== 200 && res.status !== 201) {
+            setResponse({
+              ...response,
+              error: true,
+              message: res.data.Message,
+            });
+            return;
+          }
+          setResponse({
+            ...response,
+            success: true,
+            message: `${res.data.message}. A confirmation link has been sent to your email.Please check and confirm your email to continue.`,
+          });
+          return;
+        } catch (error) {
+          setIsRegistering(false);
+          setResponse({
+            ...response,
+            error: true,
+            success: false,
+            message: "Something went wrong on our end. Please try again.",
+          });
+        }
+      })
+      .catch((error) => {
+        setResponse({
+          ...response,
+          error: true,
+          success: false,
+          message: error.message,
+        });
+      });
   };
 
-  const handleSignup = async () => {
-    setIsRegistering(true);
-    try {
-      const validInputs = await validateSignUp(signupState);
-      const res = await _registerUser(validInputs);
-      setIsRegistering(false);
-      if (res.status !== 200 && res.status !== 201) {
-        setResponse({ ...response, error: true, message: res.data.Message });
-        return;
+  const handleStage = async () => {
+    if (stage === 1) {
+      const stageOnePayload = {
+        firstName: signupState.firstName,
+        lastName: signupState.lastName,
+        email: signupState.email,
+        phoneNumber: signupState.phoneNumber,
+        password: signupState.password,
+        roleType: 0,
+      };
+      const schema = getSignUpValidationSchema(stageOnePayload);
+
+      if (await schema.isValid(stageOnePayload)) {
+        return setStage((stage) => stage + 1);
       }
-      setResponse({
-        ...response,
-        success: true,
-        message: `${res.data.message}. A confirmation link has been sent to your email.Please check and confirm your email to continue.`,
-      });
-      return;
-    } catch (error) {
-      setIsRegistering(false);
-      setResponse({
-        ...response,
+
+      return setResponse({
         error: true,
+        message:
+          "You have not entered some fields correctly. Check your inputs and try again.",
         success: false,
-        message: "Something went wrong on our end. Please try again.",
       });
-    } finally {
-      setTimeout(() => {
-        setResponse({ error: false, success: false, message: "" });
-      }, 9000);
     }
   };
 
@@ -171,9 +202,13 @@ const SignUp: FC<IProps> = ({ openSignupForm = false, handleClose }) => {
               value={signupState.password}
               onChange={handleChange}
               required
+              helperText="The password must be a minimum of 8 characters in length and should include at least one special character."
               error={
-                signupState.password.trim().length === 0 ||
-                signupState.password !== confirmPassword
+                signupState.password.trim().length < 8 ||
+                /[$&+,:;=?@#|'<>.^*()%!-]/gm.test(signupState.password) ===
+                  false ||
+                (confirmPassword.length > 0 &&
+                  signupState.password !== confirmPassword)
               }
               InputProps={{
                 endAdornment: (
@@ -195,7 +230,8 @@ const SignUp: FC<IProps> = ({ openSignupForm = false, handleClose }) => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               error={
-                confirmPassword.trim().length === 0 ||
+                confirmPassword.trim().length < 8 ||
+                /[$&+,:;=?@#|'<>.^*()%!-]/gm.test(confirmPassword) === false ||
                 confirmPassword !== signupState.password
               }
               InputProps={{
@@ -299,6 +335,9 @@ const SignUp: FC<IProps> = ({ openSignupForm = false, handleClose }) => {
           <AlertComponent
             severity={response.error ? "error" : "success"}
             message={response.message}
+            onClose={() =>
+              setResponse({ error: false, success: false, message: "" })
+            }
           />
         )}
         <Box
@@ -352,7 +391,7 @@ const SignUp: FC<IProps> = ({ openSignupForm = false, handleClose }) => {
             <Button
               fullWidth
               type="button"
-              onClick={() => setStage((stage) => stage + 1)}
+              onClick={handleStage}
               disableElevation
               variant="contained"
               disabled={

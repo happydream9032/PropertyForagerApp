@@ -27,7 +27,7 @@ const Dashboard: FC = () => {
       ),
     },
     {
-      route: `/${authData?.userName.split("@")[0]}`,
+      route: `/${authData?.userName.split("@")[0]}?pId=${authData?.id}`,
       title: "My Profile",
       description: "Personal information, company details, settings",
       icon: (

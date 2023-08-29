@@ -63,6 +63,9 @@ const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
           router.push(`/${resData.userName.split("@")[0]}?pId=${resData.id}`);
         }
       } else {
+        if (redirectPath === "/[username]") {
+          return router.back();
+        }
         router.push(redirectPath);
       }
     } catch (error) {

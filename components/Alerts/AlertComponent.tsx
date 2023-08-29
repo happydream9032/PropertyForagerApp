@@ -1,14 +1,15 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import Alert from "@mui/material/Alert";
 
 interface IProps {
   severity: "error" | "warning" | "info" | "success";
   message: string;
+  onClose: () => void;
 }
 
-const AlertComponent: FC<IProps> = ({ severity, message }) => {
+const AlertComponent: FC<IProps> = ({ severity, message, onClose }) => {
   return (
-    <Alert variant="filled" severity={severity}>
+    <Alert onClose={onClose} variant="filled" severity={severity}>
       {message}
     </Alert>
   );
