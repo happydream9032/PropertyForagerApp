@@ -1,5 +1,5 @@
 type BaseType = {
-  CreatedAt: Date;
-  UpdatedAt: Date;
-  CreatedByUserId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdByUserId: string;
 };
