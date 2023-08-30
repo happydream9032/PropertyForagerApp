@@ -1,8 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import { useTheme } from "@mui/material/styles";
@@ -11,23 +9,18 @@ import {
   GetPropertiesForAgencyRequest,
   GetPropertiesForOwnerRequest,
   PropertiesList as PropertiesForAgency,
-  PropertyStatus,
 } from "@/types/property";
 import StyledSearchComponent from "@/components/Shared/StyledSearchComponent";
 import PropertiesLoader from "@/components/Shared/PropertiesLoader";
 import { _getPropertiesForAgency } from "@/services/propertyService";
 import useAuthData from "@/components/Shared/useAuthData";
 import { getAgency, getUser } from "@/utils/functions";
-import { IUser } from "@/types/user";
-import { IAgency } from "@/types/agency";
 import PropertyDisplayCard from "@/components/Shared/PropertyDisplayCard";
 
 const PropertiesList: FC = () => {
-  const theme = useTheme();
   const router = useRouter();
   const { authData } = useAuthData();
   const [searchValue, setSearchValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [properties, setProperties] = useState<PropertiesForAgency>([]);
   const [isFetchingProperties, setIsFetchingProperties] = useState(false);
   const [response, setResponse] = useState({

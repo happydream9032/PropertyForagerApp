@@ -6,26 +6,55 @@ export const getSignUpValidationSchema = (
   signupState: IUserRegistrationRequest
 ) => {
   const schema: yup.ObjectSchema<IUserRegistrationRequest> = yup.object({
-    firstName: yup.string().required(),
-    lastName: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().min(6).required(),
+    firstName: yup
+      .string()
+      .required("Your first name is required")
+      .typeError("Your first name is required"),
+    lastName: yup
+      .string()
+      .required("Your last name is required")
+      .typeError("Your last name is required"),
+    email: yup
+      .string()
+      .email()
+      .required("A valid email is required")
+      .typeError("A valid email is required"),
+    password: yup
+      .string()
+      .min(8)
+      .required(
+        "The password must be a minimum of 8 characters in length and should include at least one special character."
+      )
+      .typeError(
+        "The password must be a minimum of 8 characters in length and should include at least one special character."
+      )
+      .matches(/[$&+,:;=?@#|'<>.^*()%!-]/gm),
     phoneNumber: yup
       .string()
-      .required()
+      .required("Phone number is required")
+      .typeError("Phone is required")
       .matches(/^(?:\d{2}-\d{3}-\d{3}-\d{3}|\d{13})$/gm),
     roleType: yup.number().required(),
     agencyName:
       signupState.roleType == RoleType.Agency
-        ? yup.string().required()
+        ? yup
+            .string()
+            .required("Agency name is required")
+            .typeError("Agency name is required")
         : yup.string().optional(),
     agencyCity:
       signupState.roleType == RoleType.Agency
-        ? yup.string().required()
+        ? yup
+            .string()
+            .required("Agency City is required")
+            .typeError("Agency City is required")
         : yup.string().optional(),
     agencyState:
       signupState.roleType == RoleType.Agency
-        ? yup.string().required()
+        ? yup
+            .string()
+            .required("Agency State is required.")
+            .typeError("Agency State is required.")
         : yup.string().optional(),
   });
 

@@ -36,12 +36,12 @@ const PropertyImagesFactory: FC<IProps> = ({
         const file = files[index];
         const imgPrev = URL.createObjectURL(file);
         const imagePreviewObj: IPropertyImage = {
-          CreatedAt: new Date(),
-          CreatedByUserId: "",
+          createdAt: new Date(),
+          createdByUserId: "",
           fileId: "",
           id: "",
           imageURL: imgPrev,
-          UpdatedAt: new Date(),
+          updatedAt: new Date(),
           verified: true,
         };
         setImagesForPreview((imagesForPreview) =>

@@ -11,6 +11,7 @@ import React, { FC } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import { isOrdinaryUser, logout } from "@/utils/functions";
 import { IMobileDrawerProps } from "@/types/navigation";
+import { useRouter } from "next/router";
 
 const MobileDrawer: FC<IMobileDrawerProps> = ({
   authNavItems,
@@ -21,6 +22,7 @@ const MobileDrawer: FC<IMobileDrawerProps> = ({
   navButtonTextColor,
   authData,
 }) => {
+  const router = useRouter();
   const drawer = (
     <Box
       onClick={handleDrawerToggle}
@@ -74,14 +76,9 @@ const MobileDrawer: FC<IMobileDrawerProps> = ({
                   },
                 }}
                 key={i}
+                onClick={() => router.push(`${link.href}`)}
               >
-                <Link
-                  style={{ color: "inherit", textDecoration: "none" }}
-                  color="inherit"
-                  href={link.href}
-                >
-                  {link.name}
-                </Link>
+                {link.name}
               </Button>
             ) : (
               <PrimaryButton
@@ -90,14 +87,9 @@ const MobileDrawer: FC<IMobileDrawerProps> = ({
                 disableElevation
                 variant="contained"
                 key={i}
+                onClick={() => router.push(`${link.href}`)}
               >
-                <Link
-                  style={{ color: "inherit", textDecoration: "none" }}
-                  color="inherit"
-                  href={link.href}
-                >
-                  {link.name}
-                </Link>
+                {link.name}
               </PrimaryButton>
             )
           )}

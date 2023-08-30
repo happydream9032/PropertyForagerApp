@@ -4,6 +4,19 @@ export enum RoleType {
   PropertyOwner,
 }
 
+export enum Gender {
+  Male,
+  Female,
+  Others,
+}
+
+export enum EmploymentStatus {
+  Employed,
+  SelfEmployed,
+  Student,
+  UnEmployed,
+}
+
 export interface IUser {
   id: string;
   firstName: string;
@@ -19,8 +32,8 @@ export interface IUser {
   allowRentPaymentNotifications: boolean;
   city: string | null;
   state: string | null;
-  gender: string | null;
-  employmentStatus: string | null;
+  gender: Gender | string | null;
+  employmentStatus: EmploymentStatus | string | null;
   avatarUrl: string;
   imageFileId: string;
   profileCompletionPercentage: 50;
@@ -44,4 +57,16 @@ export interface IAuthenticateResponse {
   userName: string;
   token: string;
   roles: string[];
+}
+
+export interface UserProfileUpdateRequest {
+  firstName: string;
+  lastName: string;
+  city: string | null;
+  state: string | null;
+  gender: Gender | string | null;
+  employmentStatus: EmploymentStatus | string | null;
+  allowNewPropertyNotifications: boolean;
+  allowRentDueNotifications: boolean;
+  allowRentPaymentNotifications: boolean;
 }
