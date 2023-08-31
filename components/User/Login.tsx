@@ -60,7 +60,7 @@ const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
         if (!resData.roles.includes("Tenant")) {
           router.push("/backoffice");
         } else {
-          router.push(`/${resData.userName.split("@")[0]}?pId=${resData.id}`);
+          router.push(`/${resData.userName.split("@")[0]}`);
         }
       } else {
         if (redirectPath === "/[username]") {

@@ -5,17 +5,30 @@ export enum RoleType {
 }
 
 export enum Gender {
-  Male,
-  Female,
-  Others,
+  Male = "Male",
+  Female = "Female",
+  Others = "Others",
 }
 
+export const GenderMap = {
+  Male: 0,
+  Female: 1,
+  Others: 2,
+};
+
 export enum EmploymentStatus {
-  Employed,
-  SelfEmployed,
-  Student,
-  UnEmployed,
+  Employed = "Employed",
+  SelfEmployed = "Self employed",
+  Student = "Student",
+  UnEmployed = "Unemployed",
 }
+
+export const EmploymentStatusMap = {
+  Employed: 0,
+  SelfEmployed: 1,
+  Student: 2,
+  UnEmployed: 3,
+};
 
 export interface IUser {
   id: string;
@@ -32,11 +45,11 @@ export interface IUser {
   allowRentPaymentNotifications: boolean;
   city: string | null;
   state: string | null;
-  gender: Gender | string | null;
-  employmentStatus: EmploymentStatus | string | null;
+  gender: Gender | null;
+  employmentStatus: EmploymentStatus | null;
   avatarUrl: string;
   imageFileId: string;
-  profileCompletionPercentage: 50;
+  profileCompletionPercentage: number;
 }
 
 export interface IUserRegistrationRequest {
@@ -64,8 +77,8 @@ export interface UserProfileUpdateRequest {
   lastName: string;
   city: string | null;
   state: string | null;
-  gender: Gender | string | null;
-  employmentStatus: EmploymentStatus | string | null;
+  gender: Gender | null;
+  employmentStatus: EmploymentStatus | null;
   allowNewPropertyNotifications: boolean;
   allowRentDueNotifications: boolean;
   allowRentPaymentNotifications: boolean;

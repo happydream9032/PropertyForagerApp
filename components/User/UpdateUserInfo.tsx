@@ -55,15 +55,6 @@ const UpdateUserInfo: FC<IProps> = ({
     agencyUpdateData?: UpdateAgencyRequest
   ) => {
     if (!authData) return;
-    if (userUpdatePayload.gender) {
-      userUpdatePayload.gender = Number(userUpdatePayload.gender);
-    }
-
-    if (userUpdatePayload.employmentStatus) {
-      userUpdatePayload.employmentStatus = Number(
-        userUpdatePayload.employmentStatus
-      );
-    }
     setIsUpdating(true);
     _updateProfile(userUpdatePayload, authData.token)
       .then((profileUpdateRes) => {
@@ -125,14 +116,6 @@ const UpdateUserInfo: FC<IProps> = ({
       pt={2}
       onSubmit={(e) => {
         e.preventDefault();
-        // const userPayload: Partial<UserProfileUpdateRequest> = {
-        //   firstName: userData?.firstName,
-        //   lastName: userData?.lastName,
-        //   city: userData?.city,
-        //   employmentStatus: userData?.employmentStatus,
-        //   gender: userData?.gender,
-        //   state: userData?.state,
-        // };
         const agencyPayload: UpdateAgencyRequest | undefined = agencyData
           ? {
               agencyId: agencyData?.id,
@@ -182,16 +165,19 @@ const UpdateUserInfo: FC<IProps> = ({
           onChange={handleUserDataChange}
         >
           <FormControlLabel
+            checked={userData?.gender === Gender.Male}
             value={Gender.Male}
             control={<Radio />}
             label="Male"
           />
           <FormControlLabel
             value={Gender.Female}
+            checked={userData?.gender === Gender.Female}
             control={<Radio />}
             label="Female"
           />
           <FormControlLabel
+            checked={userData?.gender === Gender.Others}
             value={Gender.Others}
             control={<Radio />}
             label="Others"
@@ -233,95 +219,79 @@ const UpdateUserInfo: FC<IProps> = ({
           onChange={handleUserDataChange}
         >
           <FormControlLabel
+            checked={userData?.employmentStatus === EmploymentStatus.Employed}
             value={EmploymentStatus.Employed}
-            control={
-              <Radio
-              // checked={
-              //   userData?.employmentStatus === EmploymentStatus.Employed
-              // }
-              />
-            }
+            control={<Radio />}
             label="Employed"
           />
           <FormControlLabel
-            value={EmploymentStatus.SelfEmployed}
-            control={
-              <Radio
-              // checked={
-              //   userData?.employmentStatus === EmploymentStatus.SelfEmployed
-              // }
-              />
+            checked={
+              userData?.employmentStatus === EmploymentStatus.SelfEmployed
             }
+            value={EmploymentStatus.SelfEmployed}
+            control={<Radio />}
             label="Self employed"
           />
           <FormControlLabel
+            checked={userData?.employmentStatus === EmploymentStatus.Student}
             value={EmploymentStatus.Student}
-            control={
-              <Radio
-              // checked={
-              //   userData?.employmentStatus === EmploymentStatus.Student
-              // }
-              />
-            }
+            control={<Radio />}
             label="Student"
           />
           <FormControlLabel
+            checked={userData?.employmentStatus === EmploymentStatus.UnEmployed}
             value={EmploymentStatus.UnEmployed}
-            control={
-              <Radio
-              // checked={
-              //   userData?.employmentStatus === EmploymentStatus.UnEmployed
-              // }
-              />
-            }
+            control={<Radio />}
             label="Unemployed"
           />
         </RadioGroup>
       </FormControl>
-      <FormControl sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <FormLabel
-          sx={{ fontWeight: 500, color: "#212121" }}
-          id="agency-details"
-        >
-          Agency Information
-        </FormLabel>
-        <TextFieldWithLabel
-          fullWidth
-          type="text"
-          name="street"
-          label="Agency Street"
-          InputLabelProps={{ style: { fontWeight: 600, fontSize: "1.1rem" } }}
-          value={agencyData?.street ?? ""}
-          onChange={handleAgencyDataChange}
-        />
-        <TextFieldWithLabel
-          fullWidth
-          type="text"
-          name="agencyName"
-          label="Agency Name"
-          InputLabelProps={{ style: { fontWeight: 600, fontSize: "1.1rem" } }}
-          value={agencyData?.agencyName}
-          onChange={handleAgencyDataChange}
-        />
-        <TextFieldWithLabel
-          fullWidth
-          type="text"
-          name="city"
-          label="Agency City"
-          InputLabelProps={{ style: { fontWeight: 600, fontSize: "1.1rem" } }}
-          value={agencyData?.city}
-          onChange={handleAgencyDataChange}
-        />
-        <TextFieldWithLabel
-          fullWidth
-          type="text"
-          name="state"
-          label="Agency State"
-          InputLabelProps={{ style: { fontWeight: 600, fontSize: "1.1rem" } }}
-          value={agencyData?.state}
-          onChange={handleAgencyDataChange}
-        />
-      </FormControl>
+      {authData?.roles.includes("Agency") && (
+        <FormControl sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <FormLabel
+            sx={{ fontWeight: 500, color: "#212121" }}
+            id="agency-details"
+          >
+            Agency Information
+          </FormLabel>
+          <TextFieldWithLabel
+            fullWidth
+            type="text"
+            name="street"
+            label="Agency Street"
+            InputLabelProps={{ style: { fontWeight: 600, fontSize: "1.1rem" } }}
+            value={agencyData?.street ?? ""}
+            onChange={handleAgencyDataChange}
+          />
+          <TextFieldWithLabel
+            fullWidth
+            type="text"
+            name="agencyName"
+            label="Agency Name"
+            InputLabelProps={{ style: { fontWeight: 600, fontSize: "1.1rem" } }}
+            value={agencyData?.agencyName}
+            onChange={handleAgencyDataChange}
+          />
+          <TextFieldWithLabel
+            fullWidth
+            type="text"
+            name="city"
+            label="Agency City"
+            InputLabelProps={{ style: { fontWeight: 600, fontSize: "1.1rem" } }}
+            value={agencyData?.city}
+            onChange={handleAgencyDataChange}
+          />
+          <TextFieldWithLabel
+            fullWidth
+            type="text"
+            name="state"
+            label="Agency State"
+            InputLabelProps={{ style: { fontWeight: 600, fontSize: "1.1rem" } }}
+            value={agencyData?.state}
+            onChange={handleAgencyDataChange}
+          />
+        </FormControl>
+      )}
       {response.message && (
         <AlertComponent
           severity={response.success ? "success" : "error"}

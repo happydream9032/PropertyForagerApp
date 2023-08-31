@@ -7,7 +7,7 @@ import ProfileComponent from "@/components/User/Profile";
 export default function Profile() {
   const router = useRouter();
   const { authData } = useAuthData();
-  const { username, pId } = router.query;
+  const { username } = router.query;
 
   return (
     <Layout pageTitle={String(username).toUpperCase()}>

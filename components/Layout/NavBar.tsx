@@ -171,7 +171,7 @@ const NavBar: FC<INavBarProps> = ({
                     color="inherit"
                     href={
                       isOrdinaryUser(authData)
-                        ? `/${authData.id}`
+                        ? `/${authData.userName.split("@")[0]}`
                         : "/backoffice"
                     }
                   >

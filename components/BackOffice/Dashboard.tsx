@@ -9,6 +9,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import CustomLinkComponent from "../CustomLinkComponent";
 import { useTheme } from "@mui/material/styles";
 import useAuthData from "../Shared/useAuthData";
+import Chip from "@mui/material/Chip";
 
 const Dashboard: FC = () => {
   const theme = useTheme();
@@ -25,6 +26,7 @@ const Dashboard: FC = () => {
           sx={{ width: "4rem", height: "4rem", color: "GrayText" }}
         />
       ),
+      available: true,
     },
     {
       route: `/${authData?.userName.split("@")[0]}?pId=${authData?.id}`,
@@ -33,6 +35,7 @@ const Dashboard: FC = () => {
       icon: (
         <PersonIcon sx={{ width: "4rem", height: "4rem", color: "GrayText" }} />
       ),
+      available: true,
     },
     {
       route: "/dashboard/documents",
@@ -43,6 +46,7 @@ const Dashboard: FC = () => {
           sx={{ width: "4rem", height: "4rem", color: "GrayText" }}
         />
       ),
+      available: false,
     },
   ];
 
@@ -65,6 +69,7 @@ const Dashboard: FC = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              position: "relative",
             }}
             key={index}
             item
@@ -72,8 +77,23 @@ const Dashboard: FC = () => {
             sm={6}
             lg={4}
           >
+            {!dashboardRoute.available && (
+              <Chip
+                color="secondary"
+                label="Coming soon..."
+                size="small"
+                sx={{
+                  fontWeight: 600,
+                  position: "absolute",
+                  top: 20,
+                  left: 20,
+                  zIndex: 9,
+                }}
+              />
+            )}
             <Button
               variant="contained"
+              disabled={!dashboardRoute.available}
               disableElevation
               disableRipple
               disableTouchRipple
@@ -103,6 +123,7 @@ const Dashboard: FC = () => {
                   alignItems: "center",
                   color: "GrayText",
                   width: "100%",
+                  // position: "relative",
                 }}
                 href={dashboardRoute.route}
               >

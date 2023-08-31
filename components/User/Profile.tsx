@@ -82,7 +82,7 @@ const Profile: FC<IProps> = ({ authData }) => {
             }
           }
         } catch (error) {
-          router.reload();
+          // router.reload();
         } finally {
           setLoading(false);
         }
@@ -153,7 +153,7 @@ const Profile: FC<IProps> = ({ authData }) => {
       const res = await _updateProfile(
         {
           allowNewPropertyNotifications:
-            userData?.allowNewPropertyNotifications,
+            userDataCopy?.allowNewPropertyNotifications,
           allowRentDueNotifications: userDataCopy?.allowRentDueNotifications,
           allowRentPaymentNotifications:
             userDataCopy?.allowRentPaymentNotifications,
@@ -186,7 +186,7 @@ const Profile: FC<IProps> = ({ authData }) => {
   };
 
   return (
-    <Box py={4} sx={{ width: "100%" }}>
+    <Box py={{ xs: 0, sm: 4 }} sx={{ width: "100%" }}>
       <Snackbar message={response.message} open={response.message.length > 0} />
       {loading ? (
         <CircularProgress />
@@ -475,24 +475,28 @@ const Profile: FC<IProps> = ({ authData }) => {
               <FormControlLabel
                 control={
                   <CheckBox
+                    name="allowRentDueNotifications"
+                    checked={
+                      userDataCopy !== null &&
+                      Boolean(userDataCopy.allowRentDueNotifications)
+                    }
+                    onChange={handleNotificationsSetting}
+                  />
+                }
+                label="Rent Due Notifications"
+              />
+              <FormControlLabel
+                control={
+                  <CheckBox
                     name="allowNewPropertyNotifications"
                     checked={
-                      userDataCopy?.allowNewPropertyNotifications ?? false
+                      userDataCopy !== null &&
+                      Boolean(userDataCopy.allowNewPropertyNotifications)
                     }
                     onChange={handleNotificationsSetting}
                   />
                 }
                 label="New Property Notifications"
-              />
-              <FormControlLabel
-                control={
-                  <CheckBox
-                    name="allowRentDueNotifications"
-                    checked={userDataCopy?.allowRentDueNotifications ?? false}
-                    onChange={handleNotificationsSetting}
-                  />
-                }
-                label="Rent Due Notifications"
               />
               {authData && !isOrdinaryUser(authData) && (
                 <FormControlLabel
@@ -500,7 +504,8 @@ const Profile: FC<IProps> = ({ authData }) => {
                     <CheckBox
                       name="allowRentPaymentNotifications"
                       checked={
-                        userDataCopy?.allowRentPaymentNotifications ?? false
+                        userDataCopy !== null &&
+                        Boolean(userDataCopy.allowRentPaymentNotifications)
                       }
                       onChange={handleNotificationsSetting}
                     />
@@ -516,7 +521,10 @@ const Profile: FC<IProps> = ({ authData }) => {
                   variant="outlined"
                   sx={{ width: "5rem", textTransform: "none" }}
                   size="small"
-                  onClick={() => window.location.reload()}
+                  onClick={() => {
+                    setUserDataCopy(userData);
+                    setHasNotificationsChanged(false);
+                  }}
                 >
                   Undo
                 </PrimaryButton>

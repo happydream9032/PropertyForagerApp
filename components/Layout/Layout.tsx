@@ -94,7 +94,7 @@ export default function Layout({ children, pageTitle }: IProps) {
           authData={authData}
         />
         <Box component="main">
-          <Toolbar sx={{ height: "6rem" }} />
+          <Toolbar sx={{ height: "4rem" }} />
           {children}
         </Box>
 
