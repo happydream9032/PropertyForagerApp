@@ -21,6 +21,8 @@ export const publicRoutes = [
   "/property/[propertyId]",
   "/signup",
   "/login",
+  "/forgot-password",
+  "/passwordReset/[resetToken]",
 ];
 
 export const getAuthorizedRedirectPath = (targetPathname: string) => {

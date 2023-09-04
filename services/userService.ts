@@ -1,5 +1,7 @@
 import {
+  ChangePasswordRequest,
   IUserRegistrationRequest,
+  ResetPasswordRequest,
   UserProfileUpdateRequest,
 } from "@/types/user";
 import { axiosInstance } from "./axiosConfig";
@@ -21,8 +23,55 @@ export const _loginUser = async (email: string, password: string) => {
     "/api/accounts/authenticate",
     { email, password },
     {
+      validateStatus: (status) => status < 500,
       headers: {
         "Content-Type": "application/json",
+      },
+    }
+  );
+  return response;
+};
+
+export const _forgetPassword = async (email: string) => {
+  const response = await axiosInstance.post(
+    `/api/accounts/forgetPassword/${email}`,
+    {},
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response;
+};
+
+export const _resetPassword = async (payload: ResetPasswordRequest) => {
+  const response = await axiosInstance.post(
+    `/api/accounts/resetPassword`,
+    { ...payload },
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response;
+};
+
+export const _changePassword = async (
+  payload: ChangePasswordRequest,
+  authToken: string
+) => {
+  const response = await axiosInstance.post(
+    `/api/accounts/changePassword`,
+    { ...payload },
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
       },
     }
   );

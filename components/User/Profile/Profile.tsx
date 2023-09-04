@@ -21,11 +21,11 @@ import {
 } from "@/utils/functions";
 import { IAgency } from "@/types/agency";
 import CheckBox from "@mui/material/Checkbox";
-import PrimaryButton from "../Buttons/PrimaryButton";
+import PrimaryButton from "../../Buttons/PrimaryButton";
 import Chip from "@mui/material/Chip";
 import dayjs from "dayjs";
-import SimpleDialog from "../Modals/SimpleDialog";
-import StyledFileInput from "../Shared/StyledFileInput";
+import SimpleDialog from "../../Modals/SimpleDialog";
+import StyledFileInput from "../../Shared/StyledFileInput";
 import UpdatePhoto from "./UpdatePhoto";
 import { useRouter } from "next/router";
 import UpdateUserInfo from "./UpdateUserInfo";
@@ -36,6 +36,7 @@ import {
 } from "@/services/userService";
 import WorkIcon from "@mui/icons-material/Work";
 import Snackbar from "@mui/material/Snackbar";
+import ResetPassword from "../ResetPassword";
 
 interface IProps {
   authData: IAuthenticateResponse | null;
@@ -208,7 +209,7 @@ const Profile: FC<IProps> = ({ authData }) => {
           <Box
             sx={{
               backgroundColor: theme.palette.primary.dark,
-              height: { xs: "6rem", sm: "10rem" },
+              height: { xs: "8rem", sm: "10rem" },
               width: "100%",
               position: "relative",
             }}
@@ -543,6 +544,19 @@ const Profile: FC<IProps> = ({ authData }) => {
                 </PrimaryButton>
               </Box>
             </FormGroup>
+          </Box>
+          <Box sx={{ width: "100%", px: 4, py: 3 }}>
+            <Typography
+              sx={{
+                fontSize: "1.2rem",
+                fontWeight: 500,
+                color: theme.palette.primary.main,
+              }}
+              variant="body1"
+            >
+              Update Password
+            </Typography>
+            <ResetPassword action="update" authData={authData} />
           </Box>
           <SimpleDialog
             modalTitle="Update Profile"
