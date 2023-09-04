@@ -1,10 +1,10 @@
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
-import PrimaryButton from "../Buttons/PrimaryButton";
+import PrimaryButton from "../../Buttons/PrimaryButton";
 import { _uploadProfilePhoto } from "@/services/userService";
 import { IAuthenticateResponse } from "@/types/user";
-import AlertComponent from "../Alerts/AlertComponent";
+import AlertComponent from "../../Alerts/AlertComponent";
 
 interface IProps {
   authData: IAuthenticateResponse | null;

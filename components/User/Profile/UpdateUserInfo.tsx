@@ -6,7 +6,7 @@ import React, {
   SetStateAction,
   useState,
 } from "react";
-import TextFieldWithLabel from "../TextFields/TextFieldWithLabel";
+import TextFieldWithLabel from "../../TextFields/TextFieldWithLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -19,10 +19,10 @@ import {
   IUser,
   UserProfileUpdateRequest,
 } from "@/types/user";
-import PrimaryButton from "../Buttons/PrimaryButton";
+import PrimaryButton from "../../Buttons/PrimaryButton";
 import { IAgency, UpdateAgencyRequest } from "@/types/agency";
 import { _updateAgency, _updateProfile } from "@/services/userService";
-import AlertComponent from "../Alerts/AlertComponent";
+import AlertComponent from "../../Alerts/AlertComponent";
 
 interface IProps {
   authData: IAuthenticateResponse | null;

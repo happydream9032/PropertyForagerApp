@@ -409,7 +409,14 @@ const SignUp: FC<IProps> = ({ openSignupForm = false, handleClose }) => {
           )}
         </Box>
         <Typography>
-          Already have an account? <Link href="/login">Login</Link>
+          Already have an account?{" "}
+          <Link
+            color="primary"
+            style={{ textDecoration: "none", fontWeight: "bold" }}
+            href="/login"
+          >
+            Login
+          </Link>
         </Typography>
       </Box>
     </SimpleDialog>

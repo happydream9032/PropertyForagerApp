@@ -83,3 +83,15 @@ export interface UserProfileUpdateRequest {
   allowRentDueNotifications: boolean;
   allowRentPaymentNotifications: boolean;
 }
+
+export type ResetPasswordRequest = {
+  email: string;
+  token: string;
+  newPassword: string;
+};
+
+export type ChangePasswordRequest = {
+  email: string;
+  currentPassword: string;
+  newPassword: string;
+};

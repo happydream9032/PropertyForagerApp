@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import { FORAGER_AUTH_DATA, PREVIOUS_ROUTE_QUERY_KEY } from "@/utils/constants";
 import { getAuthorizedRedirectPath } from "@/utils/routes";
 import useAuthData from "../Shared/useAuthData";
+import AlertComponent from "../Alerts/AlertComponent";
 
 interface IProps {
   openLoginForm: boolean;
@@ -139,6 +140,23 @@ const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
             ),
           }}
         />
+        <Typography>
+          Forgot your password?{" "}
+          <Link
+            color="primary"
+            style={{ textDecoration: "none", fontWeight: "bold" }}
+            href="/forgot-password"
+          >
+            Send a reset email
+          </Link>
+        </Typography>
+        {response.message.trim().length > 0 && (
+          <AlertComponent
+            onClose={() => setResponse({ ...response, message: "" })}
+            severity={response.success ? "success" : "error"}
+            message={response.message}
+          />
+        )}
         <PrimaryButton
           fullWidth
           type={"submit"}
@@ -149,7 +167,14 @@ const Login: FC<IProps> = ({ openLoginForm = false, handleClose }) => {
           {isProcessing ? <CircularProgress /> : "Login"}
         </PrimaryButton>
         <Typography>
-          Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>
+          Don&apos;t have an account yet?{" "}
+          <Link
+            color="primary"
+            style={{ textDecoration: "none", fontWeight: "bold" }}
+            href="/signup"
+          >
+            Sign up
+          </Link>
         </Typography>
       </Box>
     </SimpleDialog>

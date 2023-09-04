@@ -261,7 +261,17 @@ const PropertyDisplayCard: FC<
         </Stack>
         <Typography gap={1} display="flex" alignItems="center" mt={1}>
           <LocationIcon color="primary" />{" "}
-          <Typography fontWeight={500} variant="body1" component="strong">
+          <Typography
+            sx={{
+              width: "inherit",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+            fontWeight={500}
+            variant="body1"
+            component="strong"
+          >
             {props.street},{props.locality}
           </Typography>
         </Typography>
