@@ -198,7 +198,7 @@ const ResetPassword: FC<IProps> = ({ resetToken, action, authData }) => {
         fullWidth
         type={showPassword ? "text" : "password"}
         name="password"
-        label={action === "reset" ? "Password" : "New Password"}
+        label="New Password"
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
         required
