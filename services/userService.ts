@@ -1,5 +1,6 @@
 import {
   ChangePasswordRequest,
+  ContactData,
   IUserRegistrationRequest,
   ResetPasswordRequest,
   UserProfileUpdateRequest,
@@ -152,5 +153,19 @@ export const _uploadProfilePhoto = async (file: File, authToken: string) => {
     }
   );
 
+  return response;
+};
+
+export const _contactUs = async (payload: ContactData) => {
+  const response = await axiosInstance.post(
+    "/api/home/contactUs",
+    { ...payload },
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   return response;
 };

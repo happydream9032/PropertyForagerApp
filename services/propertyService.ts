@@ -3,6 +3,7 @@ import {
   GetPropertiesForAgencyRequest,
   GetPropertiesForOwnerRequest,
   ListPropertiesRequest,
+  PropertyInspectionRequestPayload,
   UpdatePropertyPayload,
   UploadPropertyImagesRequest,
 } from "@/types/property";
@@ -196,6 +197,120 @@ export const _searchLocations = async (keyword: string) => {
     {
       validateStatus: (status) => status < 500,
       headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
+};
+
+export const _sendPropertyInspectionRequest = async (
+  payload: PropertyInspectionRequestPayload,
+  authToken: string
+) => {
+  const response = await axiosInstance.post(
+    `/api/properties/inspection/request`,
+    { ...payload },
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
+};
+
+export const _getPropertyInspectionRequests = async (
+  authToken: string,
+  agencyId?: string
+) => {
+  const response = await axiosInstance.get(
+    `/api/properties/inspection/request?agencyId=${agencyId}`,
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
+};
+
+export const _acceptPropertyInspectionRequest = async (
+  requestId: string,
+  authToken: string
+) => {
+  const response = await axiosInstance.put(
+    `/api/properties/inspection/request/${requestId}/accept`,
+    {},
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
+};
+
+export const _rejectPropertyInspectionRequest = async (
+  requestId: string,
+  rejectionReason: string,
+  authToken: string
+) => {
+  const response = await axiosInstance.put(
+    `/api/properties/inspection/request/${requestId}/reject`,
+    { rejectionReason },
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
+};
+
+export const _cancelPropertyInspectionRequest = async (
+  requestId: string,
+  authToken: string
+) => {
+  const response = await axiosInstance.delete(
+    `/api/properties/inspection/request/${requestId}/cancel`,
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
+};
+
+export const _completePropertyInspectionRequest = async (
+  requestId: string,
+  authToken: string,
+  agencyId?: string
+) => {
+  const response = await axiosInstance.put(
+    `/api/properties/inspection/request/${requestId}/complete?agencyId=${agencyId}`,
+    {},
+    {
+      validateStatus: (status) => status < 500,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       },
     }

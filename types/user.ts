@@ -95,3 +95,10 @@ export type ChangePasswordRequest = {
   currentPassword: string;
   newPassword: string;
 };
+
+export type ContactData = {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  message: string;
+};
