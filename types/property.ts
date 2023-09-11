@@ -133,3 +133,12 @@ export type UploadPropertyImagesRequest = {
 export type UpdatePropertyPayload = {
   propertyId: string;
 } & Partial<AddPropertyPayload>;
+
+export type PropertyInspectionRequestPayload = {
+  propertyId: string;
+  senderFullName: string;
+  senderEmail: string;
+  phoneNumber: string;
+  propertyAgencyId?: string;
+  propertyOwnerId?: string;
+};
