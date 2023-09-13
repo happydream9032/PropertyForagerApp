@@ -229,7 +229,9 @@ export const _getPropertyInspectionRequests = async (
   agencyId?: string
 ) => {
   const response = await axiosInstance.get(
-    `/api/properties/inspection/request?agencyId=${agencyId}`,
+    `/api/properties/inspection/request?${
+      agencyId ? `agencyId=${agencyId}` : ""
+    }`,
     {
       validateStatus: (status) => status < 500,
       headers: {
@@ -305,7 +307,9 @@ export const _completePropertyInspectionRequest = async (
   agencyId?: string
 ) => {
   const response = await axiosInstance.put(
-    `/api/properties/inspection/request/${requestId}/complete?agencyId=${agencyId}`,
+    `/api/properties/inspection/request/${requestId}/complete?${
+      agencyId ? `agencyId=${agencyId}` : ""
+    }`,
     {},
     {
       validateStatus: (status) => status < 500,

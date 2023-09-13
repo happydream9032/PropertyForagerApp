@@ -142,3 +142,24 @@ export type PropertyInspectionRequestPayload = {
   propertyAgencyId?: string;
   propertyOwnerId?: string;
 };
+
+export enum PropertyInspectionStage {
+  Pending = 1,
+  InProgress = 2,
+  Rejected = 3,
+  Done = 4,
+}
+
+export type propertyInspectionRequest = {
+  id: string;
+  propertyId: string;
+  senderFullName: string;
+  senderEmail: string;
+  stage: PropertyInspectionStage;
+  phoneNumber: string;
+  propertyAgencyId: string | null;
+  propertyOwnerId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  createdByUserId: string;
+};

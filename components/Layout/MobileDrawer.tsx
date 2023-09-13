@@ -9,7 +9,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import React, { FC } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
-import { isOrdinaryUser, logout } from "@/utils/functions";
+import { getAgency, isOrdinaryUser, logout } from "@/utils/functions";
 import { IMobileDrawerProps } from "@/types/navigation";
 import { useRouter } from "next/router";
 
@@ -43,7 +43,11 @@ const MobileDrawer: FC<IMobileDrawerProps> = ({
                   textDecoration: "none",
                   width: "100%",
                 }}
-                href={item.href}
+                href={`${item.href}${
+                  authData?.roles.includes("Agency")
+                    ? `?agencyId=${getAgency()?.id}`
+                    : ""
+                }`}
               >
                 <ListItemText primary={item.name} />
               </Link>

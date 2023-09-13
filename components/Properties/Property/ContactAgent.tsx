@@ -88,6 +88,7 @@ const ContactAgent: FC<IProperty> = (props) => {
         senderFullName: "",
         phoneNumber: "",
       });
+      setTimeout(() => router.push("/requests"), 5000);
     } catch (error) {
       return setResponse({
         success: false,

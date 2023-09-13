@@ -27,7 +27,6 @@ import dayjs from "dayjs";
 import SimpleDialog from "../../Modals/SimpleDialog";
 import StyledFileInput from "../../Shared/StyledFileInput";
 import UpdatePhoto from "./UpdatePhoto";
-import { useRouter } from "next/router";
 import UpdateUserInfo from "./UpdateUserInfo";
 import {
   _getAgency,
@@ -39,11 +38,10 @@ import Snackbar from "@mui/material/Snackbar";
 import ResetPassword from "../ResetPassword";
 
 interface IProps {
-  authData: IAuthenticateResponse | null;
+  authData: IAuthenticateResponse;
 }
 const Profile: FC<IProps> = ({ authData }) => {
   const theme = useTheme();
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState<IUser | null>(null);
   const [userDataCopy, setUserDataCopy] = useState(userData);
@@ -57,39 +55,48 @@ const Profile: FC<IProps> = ({ authData }) => {
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [response, setResponse] = useState({ success: false, message: "" });
 
-  useEffect(() => {
-    if (authData) {
-      (async () => {
-        setLoading(true);
-        try {
-          if (authData.roles.includes("Agency")) {
-            const response = await _getAgency(authData.token);
-            if (response.status === 200) {
-              const agencyData = response.data as IAgency;
-              setAgencyData(agencyData);
-              setAgencyDataCopy(agencyData);
-              saveAgencyInLocalStorage(agencyData);
-              setUserData(agencyData.owner);
-              setUserDataCopy(agencyData.owner);
-              saveUserInLocalStorage(agencyData.owner);
-            }
-          } else {
-            const response = await _getCurrentUser(authData.token);
-            if (response.status === 200) {
-              const userData = response.data;
-              setUserData(userData);
-              setUserDataCopy(userData);
-              saveUserInLocalStorage(userData);
-            }
-          }
-        } catch (error) {
-          // router.reload();
-        } finally {
-          setLoading(false);
+  async function getProfileData() {
+    setLoading(true);
+    try {
+      if (authData.roles.includes("Agency")) {
+        const response = await _getAgency(authData.token);
+        if (response.status !== 200) {
+          return setResponse({
+            success: false,
+            message: response.data.Message,
+          });
         }
-      })();
+        const agencyData = response.data as IAgency;
+        setAgencyData(agencyData);
+        setAgencyDataCopy(agencyData);
+        saveAgencyInLocalStorage(agencyData);
+        setUserData(agencyData.owner);
+        setUserDataCopy(agencyData.owner);
+        saveUserInLocalStorage(agencyData.owner);
+      } else {
+        const response = await _getCurrentUser(authData.token);
+        if (response.status !== 200) {
+          return setResponse({
+            success: false,
+            message: response.data.Message,
+          });
+        }
+
+        const userData = response.data;
+        setUserData(userData);
+        setUserDataCopy(userData);
+        saveUserInLocalStorage(userData);
+      }
+    } catch (error) {
+      console.log("Error loading profile data", error);
+    } finally {
+      setLoading(false);
     }
-  }, [authData, router]);
+  }
+
+  useEffect(() => {
+    getProfileData();
+  }, []);
 
   const closeModal = () => {
     if (isUpdatingProfile) return;

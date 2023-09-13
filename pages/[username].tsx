@@ -11,7 +11,7 @@ export default function Profile() {
 
   return (
     <Layout pageTitle={String(username).toUpperCase()}>
-      <ProfileComponent authData={authData} />
+      {authData && <ProfileComponent authData={authData} />}
     </Layout>
   );
 }
