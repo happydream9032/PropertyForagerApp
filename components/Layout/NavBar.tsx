@@ -15,6 +15,8 @@ import GenericPopover from "../Shared/GenericPopover";
 import { getUser, isOrdinaryUser, logout } from "@/utils/functions";
 import { INavBarProps } from "@/types/navigation";
 import { IUser } from "@/types/user";
+import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/router";
 
 const NavBar: FC<INavBarProps> = ({
   authNavItems,
@@ -23,6 +25,8 @@ const NavBar: FC<INavBarProps> = ({
   navButtonTextColor,
   authData,
 }) => {
+  const theme = useTheme();
+  const router = useRouter();
   const [user, setUser] = useState<IUser | null>(null);
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -63,13 +67,21 @@ const NavBar: FC<INavBarProps> = ({
               key={i}
               sx={{
                 color: navButtonTextColor,
-                fontWeight: "500",
+                fontWeight: router.pathname === item.href ? "bold" : 400,
                 letterSpacing: "2px",
                 textTransform: "none",
+                fontSize: "1.05rem",
+                display: !authData && item.authRequired ? "none" : "",
               }}
             >
               <Link
-                style={{ color: "inherit", textDecoration: "none" }}
+                style={{
+                  color:
+                    router.pathname === item.href
+                      ? theme.palette.primary.main
+                      : "inherit",
+                  textDecoration: "none",
+                }}
                 color="inherit"
                 href={item.href}
               >

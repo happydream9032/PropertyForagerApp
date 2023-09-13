@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import AlertComponent from "@/components/Alerts/AlertComponent";
 import { getUser } from "@/utils/functions";
 import { _sendPropertyInspectionRequest } from "@/services/propertyService";
+import { PREVIOUS_ROUTE_QUERY_KEY } from "@/utils/constants";
 
 const ContactAgent: FC<IProperty> = (props) => {
   const router = useRouter();
@@ -44,7 +45,9 @@ const ContactAgent: FC<IProperty> = (props) => {
         message: "Please login before you continue",
       });
       setTimeout(() => {
-        return router.push("/login");
+        return router.push(
+          `/login?${PREVIOUS_ROUTE_QUERY_KEY}=${router.pathname}`
+        );
       }, 5000);
     }
 
@@ -52,7 +55,7 @@ const ContactAgent: FC<IProperty> = (props) => {
       return setResponse({
         success: false,
         message:
-          "It's only a tenant that can request for property inspection. Please register or login as a tenant to continue.",
+          "It is only a tenant that can request for property inspection. Please register or login as a tenant to continue.",
       });
     }
     if (
