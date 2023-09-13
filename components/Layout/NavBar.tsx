@@ -12,7 +12,7 @@ import PrimaryButton from "../Buttons/PrimaryButton";
 import Logo from "./Logo";
 import Avatar from "@mui/material/Avatar";
 import GenericPopover from "../Shared/GenericPopover";
-import { getUser, isOrdinaryUser, logout } from "@/utils/functions";
+import { getAgency, getUser, isOrdinaryUser, logout } from "@/utils/functions";
 import { INavBarProps } from "@/types/navigation";
 import { IUser } from "@/types/user";
 import { useTheme } from "@mui/material/styles";
@@ -83,7 +83,11 @@ const NavBar: FC<INavBarProps> = ({
                   textDecoration: "none",
                 }}
                 color="inherit"
-                href={item.href}
+                href={`${item.href}${
+                  authData?.roles.includes("Agency")
+                    ? `?agencyId=${getAgency()?.id}`
+                    : ""
+                }`}
               >
                 {item.name}
               </Link>
