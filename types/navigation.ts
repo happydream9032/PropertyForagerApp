@@ -2,6 +2,7 @@ import { IAuthenticateResponse } from "./user";
 
 export type NavItem = {
   name: string;
+  authRequired: boolean;
   href: string;
 };
 

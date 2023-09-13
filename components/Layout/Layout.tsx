@@ -11,20 +11,22 @@ import useAuthData from "../Shared/useAuthData";
 import { _getAgency, _getCurrentUser } from "@/services/userService";
 import { getUser, setAgency, setUser } from "@/utils/functions";
 import { IAgency } from "@/types/agency";
+import { NavItem } from "@/types/navigation";
 
 const drawerWidth = 240;
-const navItems = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Properties", href: "/properties" },
-  { name: "Contact", href: "/contact" },
+const navItems: NavItem[] = [
+  { name: "Home", authRequired: false, href: "/" },
+  { name: "About", authRequired: false, href: "/about" },
+  { name: "Properties", authRequired: false, href: "/properties" },
+  { name: "Requests", authRequired: true, href: "/requests" },
+  { name: "Contact", authRequired: false, href: "/contact" },
 ];
 
 const navButtonTextColor = "#212121";
 
-const authNavItems = [
-  { name: "Log in", href: "/login" },
-  { name: "Sign up", href: "/signup" },
+const authNavItems: NavItem[] = [
+  { name: "Log in", authRequired: false, href: "/login" },
+  { name: "Sign up", authRequired: false, href: "/signup" },
 ];
 
 interface IProps extends React.PropsWithChildren {
@@ -34,6 +36,7 @@ interface IProps extends React.PropsWithChildren {
 export default function Layout({ children, pageTitle }: IProps) {
   const router = useRouter();
   const { authData } = useAuthData();
+  // const routechangeEvent = new Cust
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
